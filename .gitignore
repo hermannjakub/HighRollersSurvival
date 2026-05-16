@@ -1,0 +1,12 @@
+
+*.exe
+*.o
+*.obj
+*.pdb
+build/
+out/
+bin/
+.idea/
+.vs/
+*.sln
+*.vcxproj

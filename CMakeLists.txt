@@ -11,7 +11,9 @@ list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml")
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System Audio)
 
-add_executable(HighRollersSurvival main.cpp)
+add_executable(HighRollersSurvival main.cpp gameObject.h
+        player.h
+        player.cpp)
 
 
 target_link_libraries(HighRollersSurvival SFML::Graphics SFML::Window SFML::System SFML::Audio)
