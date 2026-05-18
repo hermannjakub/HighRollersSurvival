@@ -1,12 +1,15 @@
 #include "Player.h"
 
 
-Player::Player(const sf::Texture& t1, const sf::Texture& t2, float x, float y)
-    : GameObject(t1, x, y), texture1(&t1), texture2(&t2), animationTimer(0.0f), isFrameOne(true)
+
+Player::Player(const sf::Texture& tStand, const sf::Texture& tRun1, const sf::Texture& tRun2, float x, float y)
+    : GameObject(tStand, x, y), textureStanding1(&tStand), textureRun1(&tRun1), textureRun2(&tRun2), animationTimer(0.0f), isFrameOne(true)
 {
     speed = 200.0f;
     health = 100;
     money = 0;
+    // Setting the origin point to make the mirror reversing more smooth.
+    sprite.setOrigin(sf::Vector2f(static_cast<float>(tStand.getSize().x) / 2.0f, static_cast<float>(tStand.getSize().y) / 2.0f));
 }
 
 void Player::update(float dt) {
@@ -19,6 +22,41 @@ void Player::update(float dt) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) { position.x += speed * dt; isMoving = true; }
 
 
+    // While pressing "A", the scale is set to -1 to make the character run the way we want.
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+        position.x -= speed * dt;
+        isMoving = true;
+        sprite.setScale(sf::Vector2f(-1.0f, 1.0f));
+    }
+
+    // The opposite way for D.
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+        position.x += speed * dt;
+        isMoving = true;
+        sprite.setScale(sf::Vector2f(1.0f, 1.0f));
+    }
+
+
+    // Setting a margin to prevent legs/arms of the player to go through the border.
+    float margin = 50.0f;
+
+    // Collision with left and right ends of the map.
+    if (position.x < margin) {
+        position.x = margin;
+    }
+    else if (position.x > 1600.0f - margin) {
+        position.x = 1600.0f - margin;
+    }
+
+    // Collision with upper and lower bounds of the map.
+    if (position.y < margin + 100.0f) { // +100 to prevent the player from running on the wall at the top.
+        position.y = margin + 100.0f;
+    }
+    else if (position.y > 893.0f - margin) {
+        position.y = 893.0f - margin;
+    }
+
+
     if (isMoving) {
         animationTimer += dt;
 
@@ -26,16 +64,16 @@ void Player::update(float dt) {
             animationTimer = 0.0f;
             isFrameOne = !isFrameOne;
 
-            // Ustawiamy odpowiednią teksturę
+            // Setting appropriate texture
             if (isFrameOne) {
-                sprite.setTexture(*texture1);
+                sprite.setTexture(*textureRun1);
             } else {
-                sprite.setTexture(*texture2);
+                sprite.setTexture(*textureRun2);
             }
         }
     } else {
         // If player stops moving, changing the texture
-        sprite.setTexture(*texture1);
+        sprite.setTexture(*textureStanding1);
         isFrameOne = true;
         animationTimer = 0.0f;
     }
