@@ -1,4 +1,4 @@
-#include "Player.h"
+#include "player.h"
 
 
 
@@ -14,7 +14,7 @@ Player::Player(const sf::Texture& tStand, const sf::Texture& tRun1, const sf::Te
 
 void Player::update(float dt) {
     bool isMoving = false;
-
+    sf::Vector2f oldPos = position;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) { position.y -= speed * dt; isMoving = true; }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) { position.y += speed * dt; isMoving = true; }
@@ -55,6 +55,17 @@ void Player::update(float dt) {
     else if (position.y > 893.0f - margin) {
         position.y = 893.0f - margin;
     }
+
+    // Solid area that player can not go into for every playable object.
+    sf::FloatRect solidRoulette(sf::Vector2f(30.0f, 230.0f), sf::Vector2f(220.0f, 400.0f));
+    sf::FloatRect solidShop(sf::Vector2f(630.0f, 110.0f), sf::Vector2f(340.0f, 180.0f));
+    sf::FloatRect solidSlots(sf::Vector2f(1350.0f, 335.0f), sf::Vector2f(250.0f, 225.0f));
+
+    // If position of the player wants to go into any of objects (roulette, cardgames, shop)
+    if (solidRoulette.contains(position) || solidShop.contains(position) || solidSlots.contains(position)) {
+        position = oldPos; // Returning back to the old position - before interfering with any of the areas.
+    }
+
 
 
     if (isMoving) {

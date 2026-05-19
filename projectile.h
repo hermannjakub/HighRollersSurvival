@@ -1,7 +1,7 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 
-#include "GameObject.h"
+#include "gameObject.h"
 
 class Projectile : public GameObject {
 private:
