@@ -2,7 +2,7 @@
 #define HIGHROLLERSSURVIVAL_PLAYER_H
 
 
-#include "GameObject.h"
+#include "gameObject.h"
 
 class Player : public GameObject {
 private:

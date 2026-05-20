@@ -17,7 +17,14 @@ add_executable(HighRollersSurvival main.cpp gameObject.h
         projectile.h
         projectile.cpp
         game.h
-        game.cpp)
+        game.cpp
+        enemy.h
+        enemy.cpp
+        assetManager.h
+        assetManager.cpp
+        gameState.h
+        roulette.h
+        roulette.cpp)
 
 
 target_link_libraries(HighRollersSurvival SFML::Graphics SFML::Window SFML::System SFML::Audio)

@@ -12,6 +12,7 @@ protected:
     sf::Sprite sprite;
 
 public:
+    bool isDestroyed = false;
     GameObject(const sf::Texture& texture, float x, float y)
         : position(x, y), sprite(texture) {}
 
@@ -21,9 +22,12 @@ public:
 
     virtual void update(float dt) = 0;
     virtual void draw(sf::RenderWindow& window) = 0;
+    virtual void takeDamage(int dmg) {}
 
 
     sf::Vector2f getPosition() const { return position; }
+
+    virtual sf::FloatRect getGlobalBounds() const { return sprite.getGlobalBounds(); }
 };
 
 #endif
