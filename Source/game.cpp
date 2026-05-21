@@ -2,9 +2,10 @@
 
 Game::Game() :
     window(sf::VideoMode({1600, 893}), "High Roller's Survival"),
-    roulette(assets), // Initialising the roulette module.
-    backgroundSprite(assets.background),
-    hudText(assets.hudFont)
+    roulette(assets),// Initialising the roulette module.
+    cardGame(assets), // Initialising the cardgame module.
+    backgroundSprite(assets.background), // Initialising the background sprite.
+    hudText(assets.hudFont) // Initialising the hud elements.
 {
     // Initialising the window size and framerate.
     window.setFramerateLimit(60);
@@ -21,7 +22,7 @@ Game::Game() :
     hudText.setFillColor(sf::Color::White);
     hudText.setPosition(sf::Vector2f(20.0f, 20.0f));
 
-    // Setting starting variables for player etc.
+    // Setting starting variables for player.
     shootTimer = 0.0f;
     currentState = GameState::Hub;
     consecutiveWins = 0;
@@ -140,15 +141,11 @@ void Game::update(float dt) {
         }
     }
     else if (currentState == GameState::CardGame) {
-        // Card game logic
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-            currentState = GameState::Hub; // Exiting the card game
-            std::cout << "Going back to the casino." << std::endl;
-        }
+        // Delegating all card game logic to the CardGame class.
+        cardGame.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets);
     }
-} // <--- TUTAJ ZAMYKA SIĘ UPDATE()
+}
 
-// A TUTAJ BEZPIECZNIE ZACZYNA SIĘ RENDER()
 void Game::render() {
     window.clear(sf::Color::Black);
 
@@ -177,6 +174,12 @@ void Game::render() {
                      " | Black: $" + std::to_string(roulette.getBetBlack()) +
                      " | Green: $" + std::to_string(roulette.getBetGreen());
     }
+
+    else if (currentState == GameState::CardGame) {
+        // Delegating the rendering of the card game to the CardGame class.
+        cardGame.render(window);
+    }
+
 
     hudText.setString(hudString);
     window.draw(hudText); // Drawing the hud itself.

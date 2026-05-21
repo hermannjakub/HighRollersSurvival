@@ -14,6 +14,7 @@
 #include "assetManager.h"
 #include "gameState.h"
 #include "roulette.h"
+#include "cardGame.h"
 
 class Game {
 public:
@@ -33,6 +34,7 @@ private:
 
     // --- GAME MODULES ---
     Roulette roulette;
+    CardGame cardGame;
 
     // --- SPRITES & TEXTS ---
     sf::Sprite backgroundSprite;

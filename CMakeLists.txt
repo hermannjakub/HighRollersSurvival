@@ -11,20 +11,22 @@ list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml")
 
 find_package(SFML 3 REQUIRED COMPONENTS Graphics Window System Audio)
 
-add_executable(HighRollersSurvival main.cpp gameObject.h
-        player.h
-        player.cpp
-        projectile.h
-        projectile.cpp
-        game.h
-        game.cpp
-        enemy.h
-        enemy.cpp
-        assetManager.h
-        assetManager.cpp
-        gameState.h
-        roulette.h
-        roulette.cpp)
+add_executable(HighRollersSurvival Source/main.cpp Source/gameObject.h
+        Source/player.h
+        Source/player.cpp
+        Source/projectile.h
+        Source/projectile.cpp
+        Source/game.h
+        Source/game.cpp
+        Source/enemy.h
+        Source/enemy.cpp
+        Source/assetManager.h
+        Source/assetManager.cpp
+        Source/gameState.h
+        Source/roulette.h
+        Source/roulette.cpp
+        Source/cardGame.h
+        Source/cardgame.cpp)
 
 
 target_link_libraries(HighRollersSurvival SFML::Graphics SFML::Window SFML::System SFML::Audio)

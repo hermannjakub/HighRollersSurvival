@@ -1,4 +1,4 @@
-#include "Roulette.h"
+#include "roulette.h"
 #include <iostream>
 
 Roulette::Roulette(AssetManager& assets)
@@ -53,7 +53,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
         currentState = GameState::Hub;
         std::cout << "Withdrawing the bets, going back to the casino." << std::endl;
     }
-
+    // Limiting the time for showing the result texture.
     if (showResultSprite) {
         resultDisplayTimer -= dt;
         if (resultDisplayTimer <= 0.0f) {
@@ -90,7 +90,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
                     playerMoney -= 5;
                     sf::Sprite newChip(assets.rouletteChip); // Creating a new sprite visual.
                     // Random placement of the chip on the button.
-                    newChip.setPosition(sf::Vector2f(1150.0f + static_cast<float>(rand() % 220), 200.0f + static_cast<float>(rand() % 130)));
+                    newChip.setPosition(sf::Vector2f(1150.0f + static_cast<float>(rand() % 220), 180.0f + static_cast<float>(rand() % 130)));
                     // Adding the chip to the container.
                     greenChipsVisuals.push_back(newChip);
                 } else if (rightClicked && betGreen >= 5) { // Withdrawing the bets
@@ -121,7 +121,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
                     playerMoney -= 5;
                     sf::Sprite newChip(assets.rouletteChip);
 
-                    newChip.setPosition(sf::Vector2f(1150.0f + static_cast<float>(rand() % 220), 540.0f + static_cast<float>(rand() % 130)));
+                    newChip.setPosition(sf::Vector2f(1150.0f + static_cast<float>(rand() % 220), 560.0f + static_cast<float>(rand() % 130)));
                     blackChipsVisuals.push_back(newChip);
                 } else if (rightClicked && betBlack >= 5) {
                     betBlack -= 5;
@@ -186,7 +186,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
                 std::cout << "You have got: " << consecutiveWins << " consecutive wins!"<< std::endl;
 
-                if (consecutiveWins >= 2) {
+                if (consecutiveWins >= 2) { // If 2 consecutive wins, setting gamemode to survival and spawning the enemy.
                     currentState = GameState::Survival;
                     std::cout << "The casino security is after you! Defend yourself!" << std::endl;
 
@@ -217,7 +217,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
     }
 }
 
-// ZWRÓĆ UWAGĘ: Zgubiona funkcja render wraca na swoje miejsce!
+
 void Roulette::render(sf::RenderWindow& window) {
     // When we are in the roullette mode, we draw only the ui, game is frozen.
     window.draw(rouletteUISprite);

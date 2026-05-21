@@ -27,26 +27,26 @@ public:
     int getBetGreen() const { return betGreen; }
 
 private:
+    // Visuals of ui
     sf::Sprite wheelSprite;
     sf::Sprite pointerSprite;
     sf::Sprite rouletteUISprite;
     sf::Sprite winLoseSprite;
-
+    // Sounds for results.
     sf::Sound winSound;
     sf::Sound loseSound;
-
+    // Variables storing the amount of money player have bet on every colour.
     int betRed;
     int betBlack;
     int betGreen;
-
+    // Containers storing the visuals of bets.
     std::vector<sf::Sprite> redChipsVisuals;
     std::vector<sf::Sprite> blackChipsVisuals;
     std::vector<sf::Sprite> greenChipsVisuals;
-
+    // Logic variables.
     bool isSpinning;
     float spinSpeed;
     float spinTimer;
-
     float resultDisplayTimer;
     bool showResultSprite;
 };

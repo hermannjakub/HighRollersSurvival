@@ -14,8 +14,11 @@ public:
     sf::Texture enemyFastRun1, enemyFastRun2, enemyFastAttack;
     sf::Texture wheel, pointer, rouletteUI;
     sf::Texture winTexture, loseTexture;
+    sf::Texture card10, cardJ, cardQ, cardK, cardA, cardHidden;
+    sf::Texture cardGameUI;
 
     // --- FONTS & SOUNDS ---
     sf::Font hudFont;
     sf::SoundBuffer winBuffer, loseBuffer;
+    sf::Sound winSound, loseSound;
 };
