@@ -6,9 +6,10 @@ AssetManager::AssetManager():
 winSound(winBuffer),loseSound(loseBuffer){
 
 
-    // Initialising the background texture.
-    if (!background.loadFromFile("Assets/casino_map.png")) {
-        std::cerr << "Error - Texture (casino_map.png) not found!" << std::endl;
+    // Initialising the background and gameover texture.
+    if (!background.loadFromFile("Assets/casino_map.png") ||
+        !gameOver.loadFromFile("Assets/game_over.png")) {
+        std::cerr << "Error - Textures (casino_map.png/game_over.png) not found!" << std::endl;
     }
     //Initialising player's textures.
     if (!playerStanding.loadFromFile("Assets/playerStanding.png") ||
@@ -68,5 +69,9 @@ winSound(winBuffer),loseSound(loseBuffer){
         !cardGameUI.loadFromFile("Assets/cardgame_UI.png")) {
         std::cerr << "Error - Cardgame textures (card_10.png/card_J.png/card_Q.png/card_K.png/card_A.png/card_hidden.png/cardgame_UI.png) not found!" << std::endl;
         }
+
+    if (!shopUI.loadFromFile("Assets/shop_UI.png")) {
+        std::cerr << "Error - Shop UI (Shop_UI.png) not found in Assets!" << std::endl;
+    }
 
 }

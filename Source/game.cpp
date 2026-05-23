@@ -5,7 +5,9 @@ Game::Game() :
     roulette(assets),// Initialising the roulette module.
     cardGame(assets), // Initialising the cardgame module.
     backgroundSprite(assets.background), // Initialising the background sprite.
-    hudText(assets.hudFont) // Initialising the hud elements.
+    gameOverSprite(assets.gameOver), // Initialising the gameover sprite.
+    hudText(assets.hudFont),// Initialising the hud elements.
+    shop(assets) // Initialising the shop background.
 {
     // Initialising the window size and framerate.
     window.setFramerateLimit(60);
@@ -26,9 +28,11 @@ Game::Game() :
     shootTimer = 0.0f;
     currentState = GameState::Hub;
     consecutiveWins = 0;
-    playerMoney = 200;
+    playerMoney = 150;
     daysSurvived = 1;
-    playerHp = 100;
+    playerHp = 30;
+    playerMaxHp = 100;
+    playerDamage = 10;
 }
 
 // Main game loop
@@ -42,10 +46,34 @@ void Game::run() {
 }
 
 // Event manager - closing the window.
+// Event manager - closing the window and handling one-time key presses.
 void Game::processEvents() {
     while (const std::optional<sf::Event> event = window.pollEvent()) {
+        // Zamykanie okna
         if (event->is<sf::Event::Closed>()) {
             window.close();
+        }
+
+        // NOWE: Wykrywanie POJEDYNCZEGO kliknięcia klawisza (Event)
+        if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
+
+            // Jeśli kliknęliśmy Escape i jesteśmy na ekranie Game Over
+            if (keyEvent->code == sf::Keyboard::Key::Escape && currentState == GameState::GameOver) {
+                // Twardy reset kasyna
+                playerHp = 30;
+                playerMoney = 15; // Dajemy na start 15$, tak jak chciałeś
+                daysSurvived = 1;
+                consecutiveWins = 0;
+                shootTimer = 0.0f;
+
+                // Czyszczenie wrogów/pocisków
+                if (gameObjects.size() > 1) {
+                    gameObjects.erase(gameObjects.begin() + 1, gameObjects.end());
+                }
+
+                currentState = GameState::Hub;
+                std::cout << "Game restarted. Good luck!" << std::endl;
+            }
         }
     }
 }
@@ -54,6 +82,20 @@ void Game::update(float dt) {
     shootTimer += dt;
 
     if (currentState == GameState::Hub || currentState == GameState::Survival) {
+
+
+        if (playerHp <= 0) {
+            currentState = GameState::GameOver;
+            gameOverReason = "Security beat you to a pulp!";
+            std::cout << "You died! GAME OVER." << std::endl;
+        }
+        else if (playerMoney == 0 && currentState == GameState::Hub) {
+            // Checking bankrupcy in hub/survival to prevent ending the game during the roulette spin.
+            currentState = GameState::GameOver;
+            gameOverReason = "You went completely bankrupt!";
+            std::cout << "Bankrupt! GAME OVER." << std::endl;
+        }
+
 
         // If we pressed left mouse button and there was at least 0.3 sec from the pervious shot
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && shootTimer >= 0.3f) {
@@ -90,7 +132,7 @@ void Game::update(float dt) {
 
                         // If the projectile touches enemy
                         if (proj->getGlobalBounds().findIntersection(enemy->getGlobalBounds())) {
-                            enemy->takeDamage(10); // Projectile deals 10 damage
+                            enemy->takeDamage(playerDamage); // Projectile deals 10 damage
                             proj->isDestroyed = true; // Projectile disappears after touching the enemy.
                         }
                     }
@@ -134,11 +176,7 @@ void Game::update(float dt) {
         roulette.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets);
     }
     else if (currentState == GameState::ShopUI) {
-        // Shop logic
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-            currentState = GameState::Hub; // Exiting the shop
-            std::cout << "Going back to the casino." << std::endl;
-        }
+        shop.update(dt, window, shootTimer, playerMoney, currentState, playerHp, playerMaxHp, playerDamage, assets);
     }
     else if (currentState == GameState::CardGame) {
         // Delegating all card game logic to the CardGame class.
@@ -161,6 +199,22 @@ void Game::render() {
     else if (currentState == GameState::RouletteGame) {
         // Delegating the rendering of the roulette to the Roulette class.
         roulette.render(window);
+    }else if (currentState == GameState::GameOver) {
+        // Rysujemy tło Game Over
+        window.draw(gameOverSprite);
+
+        // Konfigurujemy tekst używając czcionki z huba
+        sf::Text gameOverText(assets.hudFont);
+        gameOverText.setString(gameOverReason + "\n\nYou survived " + std::to_string(daysSurvived) + " days.\n\nPress ESC to Restart");
+        gameOverText.setCharacterSize(50);
+        gameOverText.setFillColor(sf::Color::White);
+
+        // Wyśrodkowanie tekstu (SFML 3.0)
+        sf::FloatRect textRect = gameOverText.getLocalBounds();
+        gameOverText.setOrigin(sf::Vector2f(textRect.position.x + textRect.size.x / 2.0f, textRect.position.y + textRect.size.y / 2.0f));
+        gameOverText.setPosition(sf::Vector2f(800.0f, 600.0f));
+
+        window.draw(gameOverText);
     }
 
     // Drawing the HUD.
@@ -178,6 +232,9 @@ void Game::render() {
     else if (currentState == GameState::CardGame) {
         // Delegating the rendering of the card game to the CardGame class.
         cardGame.render(window);
+    }
+    else if (currentState == GameState::ShopUI) {
+        shop.render(window);
     }
 
 

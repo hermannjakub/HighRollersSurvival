@@ -1,9 +1,8 @@
 #include "cardGame.h"
 #include <iostream>
 
-
 CardGame::CardGame(AssetManager& assets)
-    // Loading the assets (textures,sounds)
+    // Loading the assets (textures, sounds)
     : cardGameUISprite(assets.cardGameUI),
       playerCardSprite(assets.cardHidden),
       dealerCardSprite(assets.cardHidden),
@@ -17,7 +16,7 @@ CardGame::CardGame(AssetManager& assets)
     lowerHitbox  = sf::FloatRect(sf::Vector2f(900.0f, 600.0f), sf::Vector2f(200.0f, 100.0f));
     playHitbox   = sf::FloatRect(sf::Vector2f(800.0f, 750.0f), sf::Vector2f(150.0f, 80.0f));
 
-    // Setting up  the result texture
+    // Setting up the result texture
     winLoseSprite.setOrigin(sf::Vector2f(assets.winTexture.getSize().x / 2.0f, assets.winTexture.getSize().y / 2.0f));
     winLoseSprite.setPosition(sf::Vector2f(800.0f, 446.0f));
 
@@ -61,6 +60,7 @@ void CardGame::setCardTexture(sf::Sprite& sprite, int value, AssetManager& asset
     }
 }
 
+// UPEWNIJ SIĘ, ŻE MASZ ZMIENNĄ daysSurvived w cardGame.h W DEFINICJI TEJ FUNKCJI!
 void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                       int& playerMoney, int& consecutiveWins, GameState& currentState,
                       std::vector<std::unique_ptr<GameObject>>& gameObjects,
@@ -98,31 +98,27 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                     betHigher += 5; playerMoney -= 5;
                     sf::Sprite newChip(assets.chip); // Adding the visual chip when placed a bet.
 
-                    // Putting the sprite in random position in the borders of button.
                     newChip.setPosition(sf::Vector2f(
                         higherHitbox.position.x + (rand() % static_cast<int>(higherHitbox.size.x)),
                         higherHitbox.position.y + (rand() % 50)
                     ));
                     higherChipsVisuals.push_back(newChip);
-                    // Returning the bets to player account if rightclicked and money has been put there.
                 } else if (rightClicked && betHigher >= 5) {
                     betHigher -= 5; playerMoney += 5;
                     if (!higherChipsVisuals.empty()) higherChipsVisuals.pop_back(); // Deleting the visual
                 }
             }
-            // Betting when leftlicked (LOWER BUTTON)
+            // Betting when leftclicked (LOWER BUTTON)
             else if (lowerHitbox.contains(mousePos)) {
                 if (leftClicked && playerMoney >= 5) {
                     betLower += 5; playerMoney -= 5;
                     sf::Sprite newChip(assets.chip); // Creating the visual sprite
 
-                    // Putting the visual chip on the button.
                     newChip.setPosition(sf::Vector2f(
                         lowerHitbox.position.x + (rand() % static_cast<int>(lowerHitbox.size.x)),
                         lowerHitbox.position.y + (rand() % 50)
                     ));
                     lowerChipsVisuals.push_back(newChip);
-                    // Deleting the bets if rightlicked
                 } else if (rightClicked && betLower >= 5) {
                     betLower -= 5; playerMoney += 5;
                     if (!lowerChipsVisuals.empty()) lowerChipsVisuals.pop_back(); // Deleting the visual
@@ -144,25 +140,20 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                         playerMoney += totalBet;
                     }
                     else {
-                        // Win logic (player only gets the money he bet accurately on the situation)
                         int winnings = 0;
                         bool playerWon = false;
 
-                        // "Higher" wins
                         if (dealerCardValue > playerCardValue && betHigher > 0) {
                             winnings = betHigher * 2;
                             playerWon = true;
                         }
-                        // "Lower" wins
                         else if (dealerCardValue < playerCardValue && betLower > 0) {
                             winnings = betLower * 2;
                             playerWon = true;
                         }
 
-                        // Paying out the money
                         if (playerWon) {
                             playerMoney += winnings;
-                            // Player earned only if the winnings were higher than the bet.
                             std::cout << "You won: $" << winnings << " (Total bet was: $" << totalBet << ")" << std::endl;
                             winLoseSprite.setTexture(assets.winTexture, true);
                             assets.winSound.play(); // Sound trigger
@@ -172,9 +163,11 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                             if (consecutiveWins >= 2) {
                                 currentState = GameState::Survival;
                                 std::cout << "The casino security is after you! Defend yourself!" << std::endl;
+
                                 gameObjects.push_back(std::make_unique<Enemy>(
                                     assets.enemyFastRun1, assets.enemyFastRun2, assets.enemyFastAttack,
-                                    -50.0f, 400.0f, gameObjects[0].get(), &playerHp, 160.0f, 30, 10, 1.0f
+                                    -50.0f, 400.0f, gameObjects[0].get(), &playerHp,
+                                    500.0f, 30.0f, 10.0f, 1.0f
                                 ));
                             }
                         } else {
@@ -187,6 +180,13 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                 }
             }
         }
+    }
+    setCardTexture(playerCardSprite, playerCardValue, assets);
+
+    if (isRevealed) {
+        setCardTexture(dealerCardSprite, dealerCardValue, assets); // Reveals the dealer's card
+    } else {
+        dealerCardSprite.setTexture(assets.cardHidden, true); // Hides under the question mark
     }
 }
 

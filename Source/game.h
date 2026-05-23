@@ -15,6 +15,7 @@
 #include "gameState.h"
 #include "roulette.h"
 #include "cardGame.h"
+#include "shop.h"
 
 class Game {
 public:
@@ -35,9 +36,11 @@ private:
     // --- GAME MODULES ---
     Roulette roulette;
     CardGame cardGame;
+    Shop shop;
 
     // --- SPRITES & TEXTS ---
     sf::Sprite backgroundSprite;
+    sf::Sprite gameOverSprite;
     sf::Text hudText;
 
     // Container for game objects.
@@ -47,8 +50,11 @@ private:
     GameState currentState;
     int consecutiveWins;
     float shootTimer;
+    std::string gameOverReason;
 
     int playerMoney;
     int daysSurvived;
     int playerHp;
+    int playerMaxHp;
+    int playerDamage;
 };
