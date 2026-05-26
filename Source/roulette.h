@@ -16,7 +16,7 @@ public:
 
     // Update gets references to the player from game.cpp to be able to modify them.
     void update(float dt, sf::RenderWindow& window, float& shootTimer,
-                int& playerMoney, int& consecutiveWins, GameState& currentState,
+                int& playerMoney, int& casinoHeat, int& heatThreshold, GameState& currentState,
                 std::vector<std::unique_ptr<GameObject>>& gameObjects,
                 int& playerHp, AssetManager& assets,
                 int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles);

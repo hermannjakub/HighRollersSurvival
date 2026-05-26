@@ -13,10 +13,10 @@ public:
     CardGame(AssetManager& assets);
 
     void update(float dt, sf::RenderWindow& window, float& shootTimer,
-                int& playerMoney, int& consecutiveWins, GameState& currentState,
+                int& playerMoney, int& casinoHeat, int& heatThreshold, GameState& currentState,
                 std::vector<std::unique_ptr<GameObject>>& gameObjects,
                 int& playerHp, AssetManager& assets,
-                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles); // <--- DODANE
+                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles);
 
     void render(sf::RenderWindow& window);
     void startNewRound(); // Draws new cards

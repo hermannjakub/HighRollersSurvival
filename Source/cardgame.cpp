@@ -62,7 +62,7 @@ void CardGame::setCardTexture(sf::Sprite& sprite, int value, AssetManager& asset
 
 
 void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
-                      int& playerMoney, int& consecutiveWins, GameState& currentState,
+                      int& playerMoney, int& casinoHeat, int& heatThreshold, GameState& currentState,
                       std::vector<std::unique_ptr<GameObject>>& gameObjects,
                       int& playerHp, AssetManager& assets,
                       int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles)
@@ -158,53 +158,63 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                             std::cout << "You won: $" << winnings << " (Total bet was: $" << totalBet << ")" << std::endl;
                             winLoseSprite.setTexture(assets.winTexture, true);
                             assets.winSound.play(); // Sound trigger
-                            consecutiveWins++;
 
-                            // Spawning the enemy if consecutive wins reach 2
-                            if (consecutiveWins >= 2) {
+                            casinoHeat += winnings;
+
+                            // Spawning the enemies if the casino heat level reaches the threshold
+                            if (casinoHeat >= heatThreshold) {
                                 currentState = GameState::Survival;
                                 std::cout << "The casino security is after you! Defend yourself!" << std::endl;
+
+                                casinoHeat = 0; // Reseting the heat after the wave
+                                heatThreshold += 25; // Increasing the threshold
                                 // Four spawnpoints for the enemies, to make the game look realistic.
                                 std::vector<sf::Vector2f> spawnPoints = {
-                                    sf::Vector2f(20.0f, 230.0f),
+                                    sf::Vector2f(50.0f, 200.0f),
                                     sf::Vector2f(20.0f, 779.0f),
                                     sf::Vector2f(1585.0f, 745.0f),
                                     sf::Vector2f(1585.0f, 236.0f)
                                 };
 
-                                // Randomly choosing one from four spawnpoints
-                                sf::Vector2f spawnPos = spawnPoints[rand() % 4];
+                                // Amount of enemies starts at 2 and increases every 9 days
+                                int enemiesToSpawn = 2 + (daysSurvived / 9);
 
-                                // Drawing the enemy type (0-9)
-                                int enemyType = rand() % 10;
+                                // For-loop spawning the enemies
+                                for (int i = 0; i < enemiesToSpawn; i++) {
+                                    // We draw the position for every enemy separately
+                                    sf::Vector2f spawnPos = spawnPoints[rand() % 4];
+                                    int enemyType = rand() % 10;
 
-                                if (enemyType == 5) {
-                                    // Fast security guard (60% chance)
-                                    gameObjects.push_back(std::make_unique<FastEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
-                                }
-                                else if (enemyType == 8) {
-                                    // Tank (30% chance)
-                                    gameObjects.push_back(std::make_unique<TankEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
-                                }
-                                else {
-                                    // Boss (10% chance)
-                                    gameObjects.push_back(std::make_unique<BossEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
+                                    if (enemyType <= 5) {
+                                        // Fast enemy (60% chance)
+                                        gameObjects.push_back(std::make_unique<FastEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
+                                    else if (enemyType <= 8) {
+                                        // Tank (30% chance)
+                                        gameObjects.push_back(std::make_unique<TankEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
+                                    else {
+                                        // Boss (10% chance)
+                                        gameObjects.push_back(std::make_unique<BossEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
                                 }
                             }
                         } else {
                             std::cout << "You lost $" << totalBet << "!" << std::endl;
                             winLoseSprite.setTexture(assets.loseTexture, true);
                             assets.loseSound.play();
-                            consecutiveWins = 0;
+                            if (casinoHeat > 0) {
+                                casinoHeat -= totalBet/2.5;
+                            }
                         }
                     }
                 }

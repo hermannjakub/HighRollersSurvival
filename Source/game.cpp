@@ -27,7 +27,8 @@ Game::Game() :
     // Setting starting variables for player.
     shootTimer = 0.0f;
     currentState = GameState::Hub;
-    consecutiveWins = 0;
+    casinoHeat = 0;
+    heatThreshold = 50;
     playerMoney = 150;
     daysSurvived = 1;
     playerHp = 30;
@@ -35,9 +36,9 @@ Game::Game() :
     playerDamage = 10;
 
     // Setting the obstacles for the enemies to prevent them from running on roulette table, shop and cardgame.
-    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(30.0f, 200.0f), sf::Vector2f(300.0f, 480.0f))); // Ruletka
-    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(590.0f, 110.0f), sf::Vector2f(370.0f, 220.0f))); // Sklep
-    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(1300.0f, 335.0f), sf::Vector2f(270.0f, 260.0f))); // Karty
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(30.0f, 200.0f), sf::Vector2f(300.0f, 350.0f))); // Roulette
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(590.0f, 110.0f), sf::Vector2f(370.0f, 220.0f))); // Shop
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(1300.0f, 335.0f), sf::Vector2f(270.0f, 260.0f))); // CardGame
 }
 
 // Main game loop
@@ -68,7 +69,8 @@ void Game::processEvents() {
                 playerHp = 30;
                 playerMoney = 15;
                 daysSurvived = 1;
-                consecutiveWins = 0;
+                casinoHeat = 0;
+                heatThreshold = 50; // The first wave of enemies spawns if the heat reaches 50.
                 shootTimer = 0.0f;
 
                 // Clearing the enemies and projectiles
@@ -150,6 +152,27 @@ void Game::update(float dt) {
             return obj->isDestroyed;
         });
 
+        // Ending the day after defeating the enemies and increasing the days survived counter.
+        if (currentState == GameState::Survival) {
+            bool enemiesAlive = false;
+
+            // Looking for the enemy in the vector, to check if there is any left
+            for (const auto& obj : gameObjects) {
+                if (dynamic_cast<Enemy*>(obj.get()) != nullptr) {
+                    enemiesAlive = true;
+                    break; // If at least one is found, we break the loop.
+                }
+            }
+
+            // If the loop confirmed that there are no enemies left.
+            if (!enemiesAlive) {
+                daysSurvived++; // Increasing days survived counter
+                currentState = GameState::Hub; // Changing the gamestate.
+
+                std::cout << "Wave cleared! You survived to see Day " << daysSurvived << ". Casino Heat relaxed." << std::endl;
+            }
+        }
+
         // Definining invisible interactive zones, which are responsible for interactions with the shop and games.
         sf::FloatRect rouletteZone(sf::Vector2f(30.0f, 200.0f), sf::Vector2f(300.0f, 480.0f)); // Left side, where the roullette is located.
         sf::FloatRect shopZone(sf::Vector2f(590.0f, 110.0f), sf::Vector2f(370.0f, 220.0f));  // Upper area, where the shop is located
@@ -177,15 +200,13 @@ void Game::update(float dt) {
         }
     }
     else if (currentState == GameState::RouletteGame) {
-        // Delegating all roulette logic to the Roulette class.
-        roulette.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
+        roulette.update(dt, window, shootTimer, playerMoney, casinoHeat, heatThreshold, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
     }
     else if (currentState == GameState::ShopUI) {
         shop.update(dt, window, shootTimer, playerMoney, currentState, playerHp, playerMaxHp, playerDamage, assets);
     }
     else if (currentState == GameState::CardGame) {
-        // Delegating all card game logic to the CardGame class.
-        cardGame.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
+        cardGame.update(dt, window, shootTimer, playerMoney, casinoHeat, heatThreshold, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
     }
 }
 
@@ -225,7 +246,8 @@ void Game::render() {
     // Drawing the HUD.
     std::string hudString = "HP: " + std::to_string(playerHp) +
                             " | MONEY: $" + std::to_string(playerMoney) +
-                            " | DAY: " + std::to_string(daysSurvived);
+                            " | DAY: " + std::to_string(daysSurvived) +
+                            " | HEAT: " + std::to_string(casinoHeat) + "/" + std::to_string(heatThreshold);
 
     // Additional information in the hud when we are in the roulette event.
     if (currentState == GameState::RouletteGame) {

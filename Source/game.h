@@ -48,7 +48,8 @@ private:
 
     // --- GAME VARIABLES ---
     GameState currentState;
-    int consecutiveWins;
+    int casinoHeat;      // Aktualny poziom "złości" kasyna
+    int heatThreshold;   // Próg, przy którym kasyno wysyła ochronę
     float shootTimer;
     std::string gameOverReason;
 

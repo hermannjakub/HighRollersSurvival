@@ -41,7 +41,7 @@ Roulette::Roulette(AssetManager& assets)
 }
 
 void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
-                      int& playerMoney, int& consecutiveWins, GameState& currentState,
+                      int& playerMoney, int& casinoHeat, int& heatThreshold, GameState& currentState,
                       std::vector<std::unique_ptr<GameObject>>& gameObjects,
                       int& playerHp, AssetManager& assets,
                       int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles) // <--- DODANE
@@ -176,7 +176,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
             // Defining if the round is won by the player (if he won more than he bet)
             if (moneyWon > totalBetThisRound) {
-                consecutiveWins++;
+                casinoHeat += moneyWon - totalBetThisRound; // Adding the won amount to the casino heat.
                 std::cout << "You have won: $" << moneyWon << " (You earned: +$" << (moneyWon - totalBetThisRound) << ")" << std::endl;
 
                 // Showing the win effects (sound, texture)
@@ -185,44 +185,52 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
                 showResultSprite = true;
                 resultDisplayTimer = 2.0f; // The texture will be visible for 2 seconds
 
-                std::cout << "You have got: " << consecutiveWins << " consecutive wins!"<< std::endl;
 
-                if (consecutiveWins >= 2) { // If 2 consecutive wins, setting gamemode to survival and spawning the enemy.
+
+                if (casinoHeat >= heatThreshold) {
                     currentState = GameState::Survival;
                     std::cout << "The casino security is after you! Defend yourself!" << std::endl;
-std::vector<sf::Vector2f> spawnPoints = {
-                                    sf::Vector2f(20.0f, 220.0f),
+
+                    casinoHeat = 0; // After every wave we reset the heat
+                    heatThreshold += 25; // Increaing the entry casino heat level every wave.
+                            std::vector<sf::Vector2f> spawnPoints = {
+                                    sf::Vector2f(70.0f, 200.0f),
                                     sf::Vector2f(20.0f, 779.0f),
                                     sf::Vector2f(1585.0f, 745.0f),
                                     sf::Vector2f(1585.0f, 236.0f)
                                 };
 
-                                // Drawing one of four spawnpoints.
-                                sf::Vector2f spawnPos = spawnPoints[rand() % 4];
 
-                                // Drawing the enemy type (0-9)
-                                int enemyType = rand() % 10;
+                                // Amount of enemies starts at 2 and increases every 9 days
+                                int enemiesToSpawn = 2 + (daysSurvived / 9);
 
-                                if (enemyType <= 5) {
-                                    // Fast enemy (60% chance)
-                                    gameObjects.push_back(std::make_unique<FastEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
-                                }
-                                else if (enemyType <= 8) {
-                                    // Tank (30% chance)
-                                    gameObjects.push_back(std::make_unique<TankEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
-                                }
-                                else {
-                                    // Boss (10% chance)
-                                    gameObjects.push_back(std::make_unique<BossEnemy>(
-                                        spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
-                                        casinoObstacles, assets, daysSurvived
-                                    ));
+                                // For-loop spawning the enemies.
+                                for (int i = 0; i < enemiesToSpawn; i++) {
+                                    // Drawing a spawn position for every enemy
+                                    sf::Vector2f spawnPos = spawnPoints[rand() % 4];
+                                    int enemyType = rand() % 10;
+
+                                    if (enemyType <= 5) {
+                                        // Fast enemy (60% chance)
+                                        gameObjects.push_back(std::make_unique<FastEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
+                                    else if (enemyType <= 8) {
+                                        // Tank (30% chance)
+                                        gameObjects.push_back(std::make_unique<TankEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
+                                    else {
+                                        // Boss (10% chance)
+                                        gameObjects.push_back(std::make_unique<BossEnemy>(
+                                            spawnPos.x, spawnPos.y, gameObjects[0].get(), &playerHp,
+                                            casinoObstacles, assets, daysSurvived
+                                        ));
+                                    }
                                 }
                 }
             } else {
@@ -233,7 +241,9 @@ std::vector<sf::Vector2f> spawnPoints = {
                 showResultSprite = true;
                 resultDisplayTimer = 2.0f; // The texture will be visible for 2 seconds
 
-                consecutiveWins = 0;
+                if (casinoHeat > 0) {
+                    casinoHeat -= totalBetThisRound/2.5;
+                }
                 std::cout << "You have lost! The money you got back: $" << moneyWon << " (You have bet: $" << totalBetThisRound << ")." << std::endl;
             }
 
