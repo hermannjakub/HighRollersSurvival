@@ -57,4 +57,6 @@ private:
     int playerHp;
     int playerMaxHp;
     int playerDamage;
+
+    std::vector<sf::FloatRect> casinoObstacles;
 };

@@ -15,7 +15,9 @@ public:
     // Projectiles
     sf::Texture chip;
     // Enemies
-    sf::Texture enemyFastRun1, enemyFastRun2, enemyFastAttack;
+    sf::Texture enemyFastRun1, enemyFastRun2, enemyFastAttack1, enemyFastAttack2;
+    sf::Texture enemyBossRun1, enemyBossRun2, enemyBossAttack1, enemyBossAttack2;
+    sf::Texture enemyTankRun1, enemyTankRun2, enemyTankAttack1, enemyTankAttack2;
     // Roulette
     sf::Texture wheel, pointer, rouletteUI, rouletteChip;
     sf::Texture winTexture, loseTexture;

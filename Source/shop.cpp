@@ -1,7 +1,7 @@
 #include "shop.h"
 #include <iostream>
 
-// --- POPRAWKA: Lista inicjalizacyjna ustawia domyślne tekstury i czcionki (SFML 3.0) ---
+// Initialising the assets.
 Shop::Shop(AssetManager& assets)
     : shopUISprite(assets.shopUI),
       hpPriceText(assets.hudFont),
@@ -15,9 +15,7 @@ Shop::Shop(AssetManager& assets)
 {
     shopUISprite.setPosition(sf::Vector2f(0.0f, 0.0f));
 
-    // ==========================================
-    // HITBOXY: Dopasuj do plusów, minusów i przycisku BUY ze swojego obrazka!
-    // ==========================================
+    // Button hitboxes
     hpPlusHitbox   = sf::FloatRect(sf::Vector2f(222.0f, 555.0f), sf::Vector2f(78.0f, 78.0f));
     hpMinusHitbox  = sf::FloatRect(sf::Vector2f(454.0f, 555.0f), sf::Vector2f(78.0f, 78.0f));
 
@@ -29,14 +27,14 @@ Shop::Shop(AssetManager& assets)
 
     buyHitbox      = sf::FloatRect(sf::Vector2f(654.0f, 766.0f), sf::Vector2f(352.0f, 104.0f));
 
-    // Inicjalizacja koszyka i posiadanych ulepszeń
+    // Initialising the shopping card and owned upgrades.
     selectedHp = 0;
     selectedHeal = 0;
     selectedDmg = 0;
     ownedHpUpgrades = 0;
     ownedDmgUpgrades = 0;
 
-    // Inicjalizacja formatowania tekstu (czcionki są już przypisane wyżej!)
+    // Initialising the formatting of the text (size, colour)
     initText(hpPriceText, 30, sf::Color::Yellow);
     initText(hpQtyText, 40, sf::Color::White);
 
@@ -49,32 +47,31 @@ Shop::Shop(AssetManager& assets)
     initText(totalCostText, 40, sf::Color::Red);
     initText(playerMoneyText, 30, sf::Color::Green);
 
-    // ==========================================
-    // POZYCJE TEKSTU: Dopasuj do okienek na grafice!
-    // ==========================================
+    // Positions of the texts (amounts, costs, total)
     hpPriceText.setPosition(sf::Vector2f(338.0f, 498.0f));
-    hpQtyText.setPosition(sf::Vector2f(370.0f, 570.0f)); // Środkowe puste okienko
+    hpQtyText.setPosition(sf::Vector2f(370.0f, 570.0f));
 
     healPriceText.setPosition(sf::Vector2f(788.0f, 498.0f));
-    healQtyText.setPosition(sf::Vector2f(820.0f, 570.0f)); // Środkowe puste okienko
+    healQtyText.setPosition(sf::Vector2f(820.0f, 570.0f));
 
     dmgPriceText.setPosition(sf::Vector2f(1236.0f, 498.0f));
-    dmgQtyText.setPosition(sf::Vector2f(1270.0f, 570.0f)); // Środkowe puste okienko
+    dmgQtyText.setPosition(sf::Vector2f(1270.0f, 570.0f));
 
-    totalCostText.setPosition(sf::Vector2f(750.0f, 695.0f)); // Długie okienko nad BUY
+    totalCostText.setPosition(sf::Vector2f(750.0f, 695.0f));
 }
 
-// Skrócona wersja funkcji pomocniczej (bo font ustawiamy na liście inicjalizacyjnej)
+// Additional function for the text.
 void Shop::initText(sf::Text& text, int size, sf::Color color) {
     text.setCharacterSize(size);
     text.setFillColor(color);
 }
 
-// Skalowanie cen
+// Price scaling depending on how many upgrades we own.
 int Shop::getHpCost()   { return 50 + (ownedHpUpgrades * 25); }
 int Shop::getHealCost() { return 30; }
 int Shop::getDmgCost()  { return 100 + (ownedDmgUpgrades * 50); }
 
+// Function getting the total cost to display to the player.
 int Shop::getTotalCost() {
     return (selectedHp * getHpCost()) +
            (selectedHeal * getHealCost()) +
@@ -86,68 +83,68 @@ void Shop::update(float dt, sf::RenderWindow& window, float& shootTimer,
                   int& playerHp, int& playerMaxHp, int& playerDamage,
                   AssetManager& assets)
 {
-    // Powrót do Huba kasyna
+    // Going back to the casino
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        selectedHp = 0; selectedHeal = 0; selectedDmg = 0; // Opróżniamy koszyk
+        selectedHp = 0; selectedHeal = 0; selectedDmg = 0; // Emptying the cart when we come back.
         currentState = GameState::Hub;
     }
 
     if (shootTimer >= 0.15f && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
-        shootTimer = 0.0f; // Reset kliknięcia
+        shootTimer = 0.0f; // Button cooldown.
         sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
-        // --- Obsługa HP ---
+        // HP logic
         if (hpPlusHitbox.contains(mousePos)) selectedHp++;
         else if (hpMinusHitbox.contains(mousePos) && selectedHp > 0) selectedHp--;
 
-        // --- Obsługa Leczenia ---
+        // Healing logic
         if (healPlusHitbox.contains(mousePos)) selectedHeal++;
         else if (healMinusHitbox.contains(mousePos) && selectedHeal > 0) selectedHeal--;
 
-        // --- Obsługa Obrażeń ---
+        // Damage logic
         if (dmgPlusHitbox.contains(mousePos)) selectedDmg++;
         else if (dmgMinusHitbox.contains(mousePos) && selectedDmg > 0) selectedDmg--;
 
-        // --- Obsługa Zakupu (BUY) ---
+        // BUY button logic
         if (buyHitbox.contains(mousePos)) {
             int total = getTotalCost();
 
             if (total > 0 && playerMoney >= total) {
                 playerMoney -= total;
-                assets.winSound.play(); // Dźwięk udanego zakupu
+                assets.winSound.play(); // Buying sound
 
-                // Aplikujemy HP Upgrade
+                // Applying the HP upgrade
                 if (selectedHp > 0) {
                     ownedHpUpgrades += selectedHp;
                     playerMaxHp += (50 * selectedHp);
                     playerHp += (50 * selectedHp);
                 }
 
-                // Aplikujemy Pełne Leczenie
+                // Applying full heal
                 if (selectedHeal > 0) {
                     playerHp = playerMaxHp;
                 }
 
-                // Aplikujemy DMG Upgrade
+                // Applying DMG upgrade
                 if (selectedDmg > 0) {
                     ownedDmgUpgrades += selectedDmg;
                     playerDamage += (5 * selectedDmg);
                 }
 
-                // Reset koszyka po zakupie
+                // Reseting the cart after buying
                 selectedHp = 0;
                 selectedHeal = 0;
                 selectedDmg = 0;
 
                 std::cout << "Purchase successful! Max HP: " << playerMaxHp << " | DMG: " << playerDamage << std::endl;
             } else if (total > 0) {
-                assets.loseSound.play(); // Dźwięk błędu - brak kasy
+                assets.loseSound.play(); // Error sound - not enough money.
                 std::cout << "Not enough money!" << std::endl;
             }
         }
     }
 
-    // Aktualizacja wyświetlanego tekstu
+    // Updating the text shown to the player.
     hpPriceText.setString("Cost: $" + std::to_string(getHpCost()));
     hpQtyText.setString(std::to_string(selectedHp));
 
@@ -162,6 +159,7 @@ void Shop::update(float dt, sf::RenderWindow& window, float& shootTimer,
 }
 
 void Shop::render(sf::RenderWindow& window) {
+    // Drawing the elements.
     window.draw(shopUISprite);
 
     window.draw(hpPriceText);

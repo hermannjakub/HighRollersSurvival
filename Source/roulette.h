@@ -7,6 +7,7 @@
 #include "gameObject.h"
 #include "enemy.h"
 #include "gameState.h"
+#include "enemyTypes.h"
 
 class Roulette {
 public:
@@ -17,7 +18,8 @@ public:
     void update(float dt, sf::RenderWindow& window, float& shootTimer,
                 int& playerMoney, int& consecutiveWins, GameState& currentState,
                 std::vector<std::unique_ptr<GameObject>>& gameObjects,
-                int& playerHp, AssetManager& assets);
+                int& playerHp, AssetManager& assets,
+                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles); // <--- DODANE
 
     void render(sf::RenderWindow& window);
 

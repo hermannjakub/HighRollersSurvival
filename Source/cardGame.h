@@ -6,6 +6,7 @@
 #include "gameState.h"
 #include "gameObject.h"
 #include "enemy.h"
+#include "enemyTypes.h"
 
 class CardGame {
 public:
@@ -14,7 +15,8 @@ public:
     void update(float dt, sf::RenderWindow& window, float& shootTimer,
                 int& playerMoney, int& consecutiveWins, GameState& currentState,
                 std::vector<std::unique_ptr<GameObject>>& gameObjects,
-                int& playerHp, AssetManager& assets);
+                int& playerHp, AssetManager& assets,
+                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles); // <--- DODANE
 
     void render(sf::RenderWindow& window);
     void startNewRound(); // Draws new cards

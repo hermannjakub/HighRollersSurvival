@@ -33,6 +33,11 @@ Game::Game() :
     playerHp = 30;
     playerMaxHp = 100;
     playerDamage = 10;
+
+    // Setting the obstacles for the enemies to prevent them from running on roulette table, shop and cardgame.
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(30.0f, 200.0f), sf::Vector2f(300.0f, 480.0f))); // Ruletka
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(590.0f, 110.0f), sf::Vector2f(370.0f, 220.0f))); // Sklep
+    casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(1300.0f, 335.0f), sf::Vector2f(270.0f, 260.0f))); // Karty
 }
 
 // Main game loop
@@ -49,24 +54,24 @@ void Game::run() {
 // Event manager - closing the window and handling one-time key presses.
 void Game::processEvents() {
     while (const std::optional<sf::Event> event = window.pollEvent()) {
-        // Zamykanie okna
+        // Closing the window
         if (event->is<sf::Event::Closed>()) {
             window.close();
         }
 
-        // NOWE: Wykrywanie POJEDYNCZEGO kliknięcia klawisza (Event)
+        // Recording the singular click.
         if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
 
-            // Jeśli kliknęliśmy Escape i jesteśmy na ekranie Game Over
+            // If we clicked escape when on gameover screen.
             if (keyEvent->code == sf::Keyboard::Key::Escape && currentState == GameState::GameOver) {
-                // Twardy reset kasyna
+                // Casino hard reset.
                 playerHp = 30;
-                playerMoney = 15; // Dajemy na start 15$, tak jak chciałeś
+                playerMoney = 15;
                 daysSurvived = 1;
                 consecutiveWins = 0;
                 shootTimer = 0.0f;
 
-                // Czyszczenie wrogów/pocisków
+                // Clearing the enemies and projectiles
                 if (gameObjects.size() > 1) {
                     gameObjects.erase(gameObjects.begin() + 1, gameObjects.end());
                 }
@@ -173,14 +178,14 @@ void Game::update(float dt) {
     }
     else if (currentState == GameState::RouletteGame) {
         // Delegating all roulette logic to the Roulette class.
-        roulette.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets);
+        roulette.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
     }
     else if (currentState == GameState::ShopUI) {
         shop.update(dt, window, shootTimer, playerMoney, currentState, playerHp, playerMaxHp, playerDamage, assets);
     }
     else if (currentState == GameState::CardGame) {
         // Delegating all card game logic to the CardGame class.
-        cardGame.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets);
+        cardGame.update(dt, window, shootTimer, playerMoney, consecutiveWins, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
     }
 }
 
@@ -200,16 +205,16 @@ void Game::render() {
         // Delegating the rendering of the roulette to the Roulette class.
         roulette.render(window);
     }else if (currentState == GameState::GameOver) {
-        // Rysujemy tło Game Over
+        // Drawing "Game over" background.
         window.draw(gameOverSprite);
 
-        // Konfigurujemy tekst używając czcionki z huba
+        // Setting the text (hub font)
         sf::Text gameOverText(assets.hudFont);
         gameOverText.setString(gameOverReason + "\n\nYou survived " + std::to_string(daysSurvived) + " days.\n\nPress ESC to Restart");
         gameOverText.setCharacterSize(50);
         gameOverText.setFillColor(sf::Color::White);
 
-        // Wyśrodkowanie tekstu (SFML 3.0)
+        // Setting the text in the middle of the screen.
         sf::FloatRect textRect = gameOverText.getLocalBounds();
         gameOverText.setOrigin(sf::Vector2f(textRect.position.x + textRect.size.x / 2.0f, textRect.position.y + textRect.size.y / 2.0f));
         gameOverText.setPosition(sf::Vector2f(800.0f, 600.0f));

@@ -23,12 +23,25 @@ winSound(winBuffer),loseSound(loseBuffer){
         std::cerr << "Error - Texture (poker_chip.png) not found!" << std::endl;
     }
 
-    // Initialising fast enemy textures
+    // Initialising enemy textures
     if (!enemyFastRun1.loadFromFile("Assets/enemy_fast1.png") ||
         !enemyFastRun2.loadFromFile("Assets/enemy_fast2.png") ||
-        !enemyFastAttack.loadFromFile("Assets/enemy_fast_attack.png")) {
+        !enemyFastAttack1.loadFromFile("Assets/enemy_fast_attack_1.png") ||
+        !enemyFastAttack2.loadFromFile("Assets/enemy_fast_attack_2.png")) {
         std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
     }
+    if (!enemyTankRun1.loadFromFile("Assets/enemy_tank1.png") ||
+        !enemyTankRun2.loadFromFile("Assets/enemy_tank2.png") ||
+        !enemyTankAttack1.loadFromFile("Assets/enemy_tank_attack_1.png") ||
+        !enemyTankAttack2.loadFromFile("Assets/enemy_tank_attack_2.png")) {
+        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
+        }
+    if (!enemyBossRun1.loadFromFile("Assets/enemy_boss1.png") ||
+        !enemyBossRun2.loadFromFile("Assets/enemy_boss2.png") ||
+        !enemyBossAttack1.loadFromFile("Assets/enemy_boss_attack_1.png") ||
+        !enemyBossAttack2.loadFromFile("Assets/enemy_boss_attack_2.png")) {
+        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
+        }
 
     // Initialising roulette textures.
     if (!wheel.loadFromFile("Assets/roulette_wheel.png") ||
