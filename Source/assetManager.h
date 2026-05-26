@@ -29,6 +29,6 @@ public:
 
     // --- FONTS & SOUNDS ---
     sf::Font hudFont;
-    sf::SoundBuffer winBuffer, loseBuffer;
-    sf::Sound winSound, loseSound;
+    sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, playerDamagedBuffer, shopSoundBuffer;
+    sf::Sound winSound, loseSound, enemyDamaged, playerDamaged, shopSound;
 };

@@ -3,7 +3,7 @@
 #include <stdatomic.h>
 
 AssetManager::AssetManager():
-winSound(winBuffer),loseSound(loseBuffer){
+winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playerDamaged(playerDamagedBuffer),shopSound(shopSoundBuffer){
 
 
     // Initialising the background and gameover texture.
@@ -57,14 +57,20 @@ winSound(winBuffer),loseSound(loseBuffer){
         std::cerr << "Error - Textures (you_win.png or you_lose.png) not found!" << std::endl;
     }
 
-    // Initialising gambling result sounds
+    // Initialising sounds
     if (!winBuffer.loadFromFile("Assets/win_sound.mp3") ||
-        !loseBuffer.loadFromFile("Assets/lose_sound.mp3")) {
-        std::cerr << "Error - sounds (win_sound.mp3/lose_sound.mp3) not found!" << std::endl;
+        !loseBuffer.loadFromFile("Assets/lose_sound.mp3") ||
+        !enemyDamagedBuffer.loadFromFile("Assets/security_ouch.wav") ||
+        !playerDamagedBuffer.loadFromFile("Assets/security_punch.wav") ||
+        !shopSoundBuffer.loadFromFile("Assets/shop_effect.wav")) {
+        std::cerr << "Error - sounds (win_sound.mp3/lose_sound.mp3/security_ouch.wav/security_punch.wav/shop_effect.wav) not found!" << std::endl;
         }else {
             // Connecting buffers to sound objects
             winSound.setBuffer(winBuffer);
             loseSound.setBuffer(loseBuffer);
+            enemyDamaged.setBuffer(enemyDamagedBuffer);
+            playerDamaged.setBuffer(playerDamagedBuffer);
+            shopSound.setBuffer(shopSoundBuffer);
         }
 
     // Loading the font for the HUD

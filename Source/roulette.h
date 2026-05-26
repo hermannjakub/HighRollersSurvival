@@ -19,7 +19,7 @@ public:
                 int& playerMoney, int& consecutiveWins, GameState& currentState,
                 std::vector<std::unique_ptr<GameObject>>& gameObjects,
                 int& playerHp, AssetManager& assets,
-                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles); // <--- DODANE
+                int& daysSurvived, const std::vector<sf::FloatRect>& casinoObstacles);
 
     void render(sf::RenderWindow& window);
 

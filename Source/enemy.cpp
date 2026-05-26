@@ -6,11 +6,13 @@ Enemy::Enemy(const sf::Texture& tRun1, const sf::Texture& tRun2,
              const sf::Texture& tAttack1, const sf::Texture& tAttack2,
              float x, float y, GameObject* targetPlayer, int* playerHpRef,
              float enemySpeed, int enemyHp, int enemyDamage, float enemyAttackCooldown,
-             const std::vector<sf::FloatRect>& obstaclesList)
+             const std::vector<sf::FloatRect>& obstaclesList,
+             AssetManager& assetsManager)
     : GameObject(tRun1, x, y),
       textureRun1(&tRun1), textureRun2(&tRun2),
       textureAttack1(&tAttack1), textureAttack2(&tAttack2),
       target(targetPlayer), playerHp(playerHpRef), obstacles(obstaclesList),
+       assets(assetsManager),
       animationTimer(0.0f), isFrameOne(true), isAttacking(false), hp(enemyHp),
       damage(enemyDamage), attackCooldown(enemyAttackCooldown),
       attackTimer(enemyAttackCooldown), attackRange(60.0f)
@@ -44,6 +46,7 @@ void Enemy::update(float dt) {
 
         if (attackTimer >= attackCooldown) {
             *playerHp -= damage;
+            assets.playerDamaged.play();
             std::cout << "Enemy hits you! -" << damage << " HP. Current HP: " << *playerHp << std::endl;
             attackTimer = 0.0f;
         }
@@ -86,6 +89,7 @@ void Enemy::update(float dt) {
 void Enemy::draw(sf::RenderWindow& window) { window.draw(sprite); }
 
 void Enemy::takeDamage(int dmg) {
+    assets.enemyDamaged.play();
     hp -= dmg;
     if (hp <= 0) {
         isDestroyed = true;

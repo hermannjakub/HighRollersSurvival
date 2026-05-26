@@ -111,7 +111,7 @@ void Shop::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
             if (total > 0 && playerMoney >= total) {
                 playerMoney -= total;
-                assets.winSound.play(); // Buying sound
+                assets.shopSound.play(); // Buying sound
 
                 // Applying the HP upgrade
                 if (selectedHp > 0) {
