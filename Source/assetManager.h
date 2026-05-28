@@ -9,7 +9,7 @@ public:
 
     // --- TEXTURES ---
     // Basic elements
-    sf::Texture background, gameOver;
+    sf::Texture background, gameOver , menuBackground, settingsBackground;
     // Player
     sf::Texture playerStanding, playerMove1, playerMove2;
     // Projectiles
@@ -29,6 +29,6 @@ public:
 
     // --- FONTS & SOUNDS ---
     sf::Font hudFont;
-    sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, playerDamagedBuffer, shopSoundBuffer;
-    sf::Sound winSound, loseSound, enemyDamaged, playerDamaged, shopSound;
+    sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, playerDamagedBuffer, shopSoundBuffer, clickSoundBuffer;
+    sf::Sound winSound, loseSound, enemyDamaged, playerDamaged, shopSound, clickSound;
 };

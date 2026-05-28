@@ -30,7 +30,9 @@ add_executable(HighRollersSurvival Source/main.cpp Source/gameObject.h
         Source/shop.h
         Source/shop.cpp
         Source/enemyTypes.h
-        Source/enemyTypes.cpp)
+        Source/enemyTypes.cpp
+        Source/mainMenu.h
+        Source/mainMenu.cpp)
 
 
 target_link_libraries(HighRollersSurvival SFML::Graphics SFML::Window SFML::System SFML::Audio)

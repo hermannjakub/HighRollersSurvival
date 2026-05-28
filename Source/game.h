@@ -7,6 +7,7 @@
 #include <optional>
 #include <iostream>
 #include <random>
+#include <fstream>
 
 #include "player.h"
 #include "projectile.h"
@@ -16,6 +17,7 @@
 #include "roulette.h"
 #include "cardGame.h"
 #include "shop.h"
+#include "mainMenu.h"
 
 class Game {
 public:
@@ -27,6 +29,9 @@ private:
     void update(float dt);
     void render();
 
+    void saveGame();
+    void loadGame();
+
     sf::RenderWindow window;
     sf::Clock clock;
 
@@ -37,6 +42,7 @@ private:
     Roulette roulette;
     CardGame cardGame;
     Shop shop;
+    MainMenu mainMenu;
 
     // --- SPRITES & TEXTS ---
     sf::Sprite backgroundSprite;
@@ -48,11 +54,13 @@ private:
 
     // --- GAME VARIABLES ---
     GameState currentState;
-    int casinoHeat;      // Aktualny poziom "złości" kasyna
-    int heatThreshold;   // Próg, przy którym kasyno wysyła ochronę
-    float shootTimer;
-    std::string gameOverReason;
+    int casinoHeat;      // Level of "angryness" of the casino
+    int heatThreshold;   // A point where the guards are spawning
+    float shootTimer;    // Cooldown timer for the shots.
+    std::string gameOverReason; // Reason of losing (appearing in the game over gamestate)
 
+// Player variables
+    float globalVolume;
     int playerMoney;
     int daysSurvived;
     int playerHp;

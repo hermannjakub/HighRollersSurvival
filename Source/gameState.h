@@ -2,6 +2,8 @@
 
 // Separating events - setting a gamestate for every of them.
 enum class GameState {
+    MainMenu,       // Main menu
+    Settings,       // Settings (accessible from main menu)
     Hub,            // Free roaming around the casino (no enemies)
     ShopUI,         // Shop
     RouletteGame,   // Roullete table

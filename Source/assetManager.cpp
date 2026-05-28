@@ -3,7 +3,7 @@
 #include <stdatomic.h>
 
 AssetManager::AssetManager():
-winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playerDamaged(playerDamagedBuffer),shopSound(shopSoundBuffer){
+winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playerDamaged(playerDamagedBuffer),shopSound(shopSoundBuffer), clickSound(clickSoundBuffer){
 
 
     // Initialising the background and gameover texture.
@@ -11,6 +11,11 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
         !gameOver.loadFromFile("Assets/game_over.png")) {
         std::cerr << "Error - Textures (casino_map.png/game_over.png) not found!" << std::endl;
     }
+    // Initialising main menu textures.
+    if (!menuBackground.loadFromFile("Assets/main_menu_bg.png") ||
+        !settingsBackground.loadFromFile("Assets/settings_menu_bg.png")) {
+        std::cerr << "Error - Menu backgrounds (Assets/main_menu_bg.png / Assets/settings_menu_bg.png) NOT FOUND!" << std::endl;
+        }
     //Initialising player's textures.
     if (!playerStanding.loadFromFile("Assets/playerStanding.png") ||
         !playerMove1.loadFromFile("Assets/playerMove1.png") ||
@@ -62,7 +67,8 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
         !loseBuffer.loadFromFile("Assets/lose_sound.mp3") ||
         !enemyDamagedBuffer.loadFromFile("Assets/security_ouch.wav") ||
         !playerDamagedBuffer.loadFromFile("Assets/security_punch.wav") ||
-        !shopSoundBuffer.loadFromFile("Assets/shop_effect.wav")) {
+        !shopSoundBuffer.loadFromFile("Assets/shop_effect.wav") ||
+        !clickSoundBuffer.loadFromFile("Assets/click_sound.wav")) {
         std::cerr << "Error - sounds (win_sound.mp3/lose_sound.mp3/security_ouch.wav/security_punch.wav/shop_effect.wav) not found!" << std::endl;
         }else {
             // Connecting buffers to sound objects

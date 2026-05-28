@@ -7,7 +7,8 @@ Game::Game() :
     backgroundSprite(assets.background), // Initialising the background sprite.
     gameOverSprite(assets.gameOver), // Initialising the gameover sprite.
     hudText(assets.hudFont),// Initialising the hud elements.
-    shop(assets) // Initialising the shop background.
+    shop(assets), // Initialising the shop background.
+    mainMenu(assets) // Initialising main menu background and sounds.
 {
     // Initialising the window size and framerate.
     window.setFramerateLimit(60);
@@ -26,7 +27,7 @@ Game::Game() :
 
     // Setting starting variables for player.
     shootTimer = 0.0f;
-    currentState = GameState::Hub;
+    currentState = GameState::MainMenu;
     casinoHeat = 0;
     heatThreshold = 50;
     playerMoney = 150;
@@ -34,6 +35,10 @@ Game::Game() :
     playerHp = 30;
     playerMaxHp = 100;
     playerDamage = 10;
+
+    // Initial settings variables
+    globalVolume = 100.0f;
+    sf::Listener::setGlobalVolume(globalVolume);
 
     // Setting the obstacles for the enemies to prevent them from running on roulette table, shop and cardgame.
     casinoObstacles.push_back(sf::FloatRect(sf::Vector2f(30.0f, 200.0f), sf::Vector2f(300.0f, 350.0f))); // Roulette
@@ -88,8 +93,23 @@ void Game::processEvents() {
 void Game::update(float dt) {
     shootTimer += dt;
 
+
+    if (currentState == GameState::MainMenu || currentState == GameState::Settings) {
+        bool requestLoad = false;
+        mainMenu.update(dt, window, shootTimer, currentState, requestLoad, globalVolume, assets);
+
+        if (requestLoad) {
+            loadGame(); // Loading the game if player clicked the button
+        }
+        return; // Blocking the update if we are in the menu
+    }
+
     if (currentState == GameState::Hub || currentState == GameState::Survival) {
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && shootTimer >= 0.5f && currentState == GameState::Hub) {
+            shootTimer = 0.0f;
+            saveGame();
+        }
 
         if (playerHp <= 0) {
             currentState = GameState::GameOver;
@@ -211,6 +231,13 @@ void Game::update(float dt) {
 }
 
 void Game::render() {
+
+    if (currentState == GameState::MainMenu || currentState == GameState::Settings) {
+        mainMenu.render(window, currentState);
+        window.display();
+        return; // Not drawing the HUD in main menu.
+    }
+
     window.clear(sf::Color::Black);
 
     // Drawing the casino background
@@ -270,4 +297,38 @@ void Game::render() {
 
     // Displaying.
     window.display();
+}
+// Game pattern for save files and saving/loading them.
+void Game::saveGame() {
+    std::ofstream file("save.txt");
+    if (file.is_open()) {
+        file << playerMoney << "\n";
+        file << daysSurvived << "\n";
+        file << playerHp << "\n";
+        file << playerMaxHp << "\n";
+        file << playerDamage << "\n";
+        file << casinoHeat << "\n";
+        file << heatThreshold << "\n";
+        file.close();
+        std::cout << "PROGRESS SAVED SUCCESSFULLY TO save.txt!" << std::endl;
+    } else {
+        std::cerr << "Error - Could not create save file!" << std::endl;
+    }
+}
+
+void Game::loadGame() {
+    std::ifstream file("save.txt");
+    if (file.is_open()) {
+        file >> playerMoney;
+        file >> daysSurvived;
+        file >> playerHp;
+        file >> playerMaxHp;
+        file >> playerDamage;
+        file >> casinoHeat;
+        file >> heatThreshold;
+        file.close();
+        std::cout << "PROGRESS LOADED SUCCESSFULLY!" << std::endl;
+    } else {
+        std::cerr << "Save file save.txt not found! Starting new round stats." << std::endl;
+    }
 }
