@@ -9,5 +9,7 @@ enum class GameState {
     RouletteGame,   // Roullete table
     CardGame,       // Card game
     Survival,       // Fight mode (when enemies are spawned)
-    GameOver        // Game over (when player dies or goes bankrupt)
+    GameOver,       // Game over (when player dies or goes bankrupt)
+    PauseMenu,      // Pasue during the game
+    PauseSettings   // Settings in pause menu.
 };

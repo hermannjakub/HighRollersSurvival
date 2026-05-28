@@ -18,6 +18,7 @@
 #include "cardGame.h"
 #include "shop.h"
 #include "mainMenu.h"
+#include "pauseMenu.h"
 
 class Game {
 public:
@@ -43,6 +44,7 @@ private:
     CardGame cardGame;
     Shop shop;
     MainMenu mainMenu;
+    PauseMenu pauseMenu;
 
     // --- SPRITES & TEXTS ---
     sf::Sprite backgroundSprite;

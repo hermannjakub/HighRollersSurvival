@@ -8,7 +8,8 @@ Game::Game() :
     gameOverSprite(assets.gameOver), // Initialising the gameover sprite.
     hudText(assets.hudFont),// Initialising the hud elements.
     shop(assets), // Initialising the shop background.
-    mainMenu(assets) // Initialising main menu background and sounds.
+    mainMenu(assets), // Initialising main menu background and sounds.
+    pauseMenu(assets) // Initialising pause menu assets.
 {
     // Initialising the window size and framerate.
     window.setFramerateLimit(60);
@@ -106,9 +107,10 @@ void Game::update(float dt) {
 
     if (currentState == GameState::Hub || currentState == GameState::Survival) {
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) && shootTimer >= 0.5f && currentState == GameState::Hub) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && shootTimer >= 0.3f) {
             shootTimer = 0.0f;
-            saveGame();
+            currentState = GameState::PauseMenu;
+            std::cout << "Game Paused." << std::endl;
         }
 
         if (playerHp <= 0) {
@@ -228,6 +230,13 @@ void Game::update(float dt) {
     else if (currentState == GameState::CardGame) {
         cardGame.update(dt, window, shootTimer, playerMoney, casinoHeat, heatThreshold, currentState, gameObjects, playerHp, assets, daysSurvived, casinoObstacles);
     }
+    else if (currentState == GameState::PauseMenu || currentState == GameState::PauseSettings) {
+        // update reurns "true" if player clicks SAVE.
+        bool requestSave = pauseMenu.update(dt, window, shootTimer, currentState, globalVolume, assets);
+        if (requestSave) {
+            saveGame();
+        }
+    }
 }
 
 void Game::render() {
@@ -294,6 +303,13 @@ void Game::render() {
 
     hudText.setString(hudString);
     window.draw(hudText); // Drawing the hud itself.
+
+
+
+    // Drawing the pause at the end, on top of every sprite.
+    if (currentState == GameState::PauseMenu || currentState == GameState::PauseSettings) {
+        pauseMenu.render(window, currentState);
+    }
 
     // Displaying.
     window.display();
