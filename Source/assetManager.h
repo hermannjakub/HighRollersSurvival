@@ -13,7 +13,7 @@ public:
     // Player
     sf::Texture playerStanding, playerMove1, playerMove2;
     // Projectiles
-    sf::Texture chip;
+    sf::Texture chip,card;
     // Enemies
     sf::Texture enemyFastRun1, enemyFastRun2, enemyFastAttack1, enemyFastAttack2;
     sf::Texture enemyBossRun1, enemyBossRun2, enemyBossAttack1, enemyBossAttack2;
@@ -27,8 +27,13 @@ public:
     // Shop
     sf::Texture shopUI;
 
-    // --- FONTS & SOUNDS ---
+    // --- FONTS, SOUNDS & MUSIC ---
     sf::Font hudFont;
     sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, playerDamagedBuffer, shopSoundBuffer, clickSoundBuffer;
     sf::Sound winSound, loseSound, enemyDamaged, playerDamaged, shopSound, clickSound;
+
+    sf::Music menuMusic;
+    sf::Music hubMusic;
+    sf::Music minigameMusic;
+    sf::Music survivalMusic;
 };

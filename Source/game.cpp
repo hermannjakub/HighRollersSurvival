@@ -29,6 +29,7 @@ Game::Game() :
     // Setting starting variables for player.
     shootTimer = 0.0f;
     currentState = GameState::MainMenu;
+    currentMusicTheme = MusicTheme::None; // For the start we set "none" for the function to detect the needed music itself.
     casinoHeat = 0;
     heatThreshold = 50;
     playerMoney = 150;
@@ -93,6 +94,7 @@ void Game::processEvents() {
 
 void Game::update(float dt) {
     shootTimer += dt;
+    updateMusic();
 
 
     if (currentState == GameState::MainMenu || currentState == GameState::Settings) {
@@ -143,7 +145,23 @@ void Game::update(float dt) {
 
             // Creating a projectile with direction vector set to where our mouse is.
             gameObjects.push_back(std::make_unique<Projectile>(assets.chip, playerPos.x, playerPos.y, aimDirection));
+
+            // Randomly drawing the texture of projectile - card/chip
+
+            // Setting chip texture as the deafult one.
+            const sf::Texture* chosenTexture = &assets.chip;
+
+            // 50% chance for changing the chip texture into card texture.
+            if (rand() % 2 == 0) {
+                chosenTexture = &assets.card;
+            }
+
+            // Creating a projectile with direction vector set to where our mouse is.
+            gameObjects.push_back(std::make_unique<Projectile>(*chosenTexture, playerPos.x, playerPos.y, aimDirection));
         }
+
+
+
 
         // Updating the elements of the game (walking, projectiles).
         for (auto& obj : gameObjects) {
@@ -346,5 +364,45 @@ void Game::loadGame() {
         std::cout << "PROGRESS LOADED SUCCESSFULLY!" << std::endl;
     } else {
         std::cerr << "Save file save.txt not found! Starting new round stats." << std::endl;
+    }
+}
+
+void Game::updateMusic() {
+    MusicTheme neededTheme;
+
+    // Checking what music actual gamestate needs.
+    if (currentState == GameState::MainMenu || currentState == GameState::Settings ||
+        currentState == GameState::PauseMenu || currentState == GameState::PauseSettings ||
+        currentState == GameState::GameOver)
+    {
+        neededTheme = MusicTheme::Menu;
+    }
+    else if (currentState == GameState::Hub || currentState == GameState::ShopUI) {
+        neededTheme = MusicTheme::Hub;
+    }
+    else if (currentState == GameState::RouletteGame || currentState == GameState::CardGame) {
+        neededTheme = MusicTheme::Minigame;
+    }
+    else if (currentState == GameState::Survival) {
+        neededTheme = MusicTheme::Survival;
+    }
+
+    // If we need other music we change it.
+    if (neededTheme != currentMusicTheme) {
+
+        // Stopping every music playing
+        assets.menuMusic.stop();
+        assets.hubMusic.stop();
+        assets.minigameMusic.stop();
+        assets.survivalMusic.stop();
+
+        // Playing the music we need.
+        if (neededTheme == MusicTheme::Menu) assets.menuMusic.play();
+        else if (neededTheme == MusicTheme::Hub) assets.hubMusic.play();
+        else if (neededTheme == MusicTheme::Minigame) assets.minigameMusic.play();
+        else if (neededTheme == MusicTheme::Survival) assets.survivalMusic.play();
+
+        // Saving the current state.
+        currentMusicTheme = neededTheme;
     }
 }

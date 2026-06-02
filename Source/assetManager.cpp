@@ -23,9 +23,10 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
         std::cerr << "Error - Player textures (playerStanding.png, or playerMove1.png, or playerMove2.png) NOT FOUND!" << std::endl;
         }
 
-    // Initialising chip texture ( projectile)
-    if (!chip.loadFromFile("Assets/poker_chip.png")) {
-        std::cerr << "Error - Texture (poker_chip.png) not found!" << std::endl;
+    // Initialising projectiles textures
+    if (!chip.loadFromFile("Assets/poker_chip.png") ||
+        !card.loadFromFile("Assets/poker_card.png")) {
+        std::cerr << "Error - Textures (poker_chip.png/poker_card.png) not found!" << std::endl;
     }
 
     // Initialising enemy textures
@@ -98,5 +99,17 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
     if (!shopUI.loadFromFile("Assets/shop_UI.png")) {
         std::cerr << "Error - Shop UI (Shop_UI.png) not found in Assets!" << std::endl;
     }
+    // Initialising the background music
+    if (!menuMusic.openFromFile("Assets/menu_music.mp3")) std::cerr << "Error! menu_music.mp3 not found in Assets!\n";
+    else { menuMusic.setLooping(true); menuMusic.setVolume(50.0f); }
+
+    if (!hubMusic.openFromFile("Assets/hub_music.mp3")) std::cerr << "Error! hub_music.mp3 not found in Assets!\n";
+    else { hubMusic.setLooping(true); hubMusic.setVolume(50.0f); }
+
+    if (!minigameMusic.openFromFile("Assets/minigame_music.mp3")) std::cerr << "Error! minigame_music.mp3 not found in Assets!\n";
+    else { minigameMusic.setLooping(true); minigameMusic.setVolume(50.0f); }
+
+    if (!survivalMusic.openFromFile("Assets/survival_music.mp3")) std::cerr << "Error! survival_music.mp3 not found in assets!\n";
+    else { survivalMusic.setLooping(true); survivalMusic.setVolume(50.0f); }
 
 }

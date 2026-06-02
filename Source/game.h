@@ -33,6 +33,12 @@ private:
     void saveGame();
     void loadGame();
 
+    enum class MusicTheme { None, Menu, Hub, Minigame, Survival };
+
+    MusicTheme currentMusicTheme;
+
+    void updateMusic();
+
     sf::RenderWindow window;
     sf::Clock clock;
 
