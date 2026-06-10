@@ -42,4 +42,8 @@ protected:
     float attackCooldown;
     float attackTimer;
     float attackRange;
+
+    int maxHp;
+    sf::RectangleShape hpBarBackground;
+    sf::RectangleShape hpBarForeground;
 };

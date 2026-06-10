@@ -19,6 +19,22 @@ Enemy::Enemy(const sf::Texture& tRun1, const sf::Texture& tRun2,
 {
     speed = enemySpeed;
     sprite.setOrigin(sf::Vector2f(static_cast<float>(tRun1.getSize().x) / 2.0f, static_cast<float>(tRun1.getSize().y) / 2.0f));
+
+    // Setting the starting hp as max hp.
+    maxHp = enemyHp;
+
+    // HP BAR CONFIGURATION
+    // Bar background (dark grey)
+    hpBarBackground.setSize(sf::Vector2f(50.0f, 6.0f));
+    hpBarBackground.setFillColor(sf::Color(30, 30, 30, 200));
+    hpBarBackground.setOrigin(sf::Vector2f(25.0f, 3.0f)); // the middle.
+
+    // Bar filling (red)
+    hpBarForeground.setSize(sf::Vector2f(50.0f, 6.0f));
+    hpBarForeground.setFillColor(sf::Color(200, 20, 20, 220));
+    // Origin is set to left side (0.0f), so the bar will get smaller from right to the left
+    hpBarForeground.setOrigin(sf::Vector2f(0.0f, 3.0f));
+
 }
 
 void Enemy::update(float dt) {
@@ -84,9 +100,30 @@ void Enemy::update(float dt) {
     }
 
     sprite.setPosition(position);
+
+    // HP BAR LOGIC
+    // Setting the bar 65px above the enemy.
+    hpBarBackground.setPosition(sf::Vector2f(position.x, position.y - 65.0f));
+
+    // Fill must be moved 25px to the left, its origin was set on the border.
+    hpBarForeground.setPosition(sf::Vector2f(position.x - 25.0f, position.y - 65.0f));
+
+    // Calculating how many % of hp is left (Protecting with max to not fall below 0)
+    float hpPercentage = std::max(0.0f, static_cast<float>(hp) / static_cast<float>(maxHp));
+
+    // Changing the width of the bar
+    hpBarForeground.setSize(sf::Vector2f(50.0f * hpPercentage, 6.0f));
 }
 
-void Enemy::draw(sf::RenderWindow& window) { window.draw(sprite); }
+void Enemy::draw(sf::RenderWindow& window) {
+    window.draw(sprite);
+
+    // Drawing the bar only if enemy is alive.
+    if (hp > 0) {
+        window.draw(hpBarBackground);
+        window.draw(hpBarForeground);
+    }
+}
 
 void Enemy::takeDamage(int dmg) {
     assets.enemyDamaged.play();
