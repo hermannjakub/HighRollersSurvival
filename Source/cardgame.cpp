@@ -170,7 +170,7 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                                 heatThreshold += 25; // Increasing the threshold
                                 // Four spawnpoints for the enemies, to make the game look realistic.
                                 std::vector<sf::Vector2f> spawnPoints = {
-                                    sf::Vector2f(50.0f, 200.0f),
+                                    sf::Vector2f(70.0f, 170.0f),
                                     sf::Vector2f(20.0f, 779.0f),
                                     sf::Vector2f(1585.0f, 745.0f),
                                     sf::Vector2f(1585.0f, 236.0f)

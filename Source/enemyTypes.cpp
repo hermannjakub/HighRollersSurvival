@@ -19,4 +19,4 @@ BossEnemy::BossEnemy(float x, float y, GameObject* targetPlayer, int* playerHpRe
     // Boss: Medium velocity, high damage.
     : Enemy(assets.enemyBossRun1, assets.enemyBossRun2, assets.enemyBossAttack1, assets.enemyBossAttack2, 
             x, y, targetPlayer, playerHpRef, 
-            150.0f + (daysSurvived * 4), 300 + (daysSurvived * 40), 40 + (daysSurvived * 8), 2.0f, obstaclesList,assets) {}
+             170.0f + (daysSurvived * 4), 300 + (daysSurvived * 40), 30 + (daysSurvived * 8), 2.0f, obstaclesList,assets) {}

@@ -194,7 +194,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
                     casinoHeat = 0; // After every wave we reset the heat
                     heatThreshold += 25; // Increaing the entry casino heat level every wave.
                             std::vector<sf::Vector2f> spawnPoints = {
-                                    sf::Vector2f(70.0f, 200.0f),
+                                    sf::Vector2f(70.0f, 130.0f),
                                     sf::Vector2f(20.0f, 779.0f),
                                     sf::Vector2f(1585.0f, 745.0f),
                                     sf::Vector2f(1585.0f, 236.0f)

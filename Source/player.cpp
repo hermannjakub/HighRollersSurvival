@@ -1,11 +1,10 @@
 #include "player.h"
-
-
+#include <cmath> // Wymagane dla std::sqrt
 
 Player::Player(const sf::Texture& tStand, const sf::Texture& tRun1, const sf::Texture& tRun2, float x, float y)
     : GameObject(tStand, x, y), textureStanding1(&tStand), textureRun1(&tRun1), textureRun2(&tRun2), animationTimer(0.0f), isFrameOne(true)
 {
-    speed = 200.0f;
+    speed = 280.0f;
     health = 100;
     money = 0;
     // Setting the origin point to make the mirror reversing more smooth.
@@ -13,29 +12,35 @@ Player::Player(const sf::Texture& tStand, const sf::Texture& tRun1, const sf::Te
 }
 
 void Player::update(float dt) {
-    bool isMoving = false;
     sf::Vector2f oldPos = position;
+    sf::Vector2f movement(0.0f, 0.0f); // Vector for calculating the movement directions
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) { position.y -= speed * dt; isMoving = true; }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) { position.y += speed * dt; isMoving = true; }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) { position.x -= speed * dt; isMoving = true; }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) { position.x += speed * dt; isMoving = true; }
+    // Collecting players interactions
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) { movement.y -= 1.0f; }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) { movement.y += 1.0f; }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) { movement.x -= 1.0f; }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) { movement.x += 1.0f; }
 
+    bool isMoving = (movement.x != 0.0f || movement.y != 0.0f);
 
-    // While pressing "A", the scale is set to -1 to make the character run the way we want.
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-        position.x -= speed * dt;
-        isMoving = true;
-        sprite.setScale(sf::Vector2f(-1.0f, 1.0f));
+    if (isMoving) {
+        // Normalising the vector
+        float length = std::sqrt(movement.x * movement.x + movement.y * movement.y);
+        movement.x /= length;
+        movement.y /= length;
+
+        // Applying the movement on players position
+        position.x += movement.x * speed * dt;
+        position.y += movement.y * speed * dt;
+
+        // Rotating the sprite depending on its movement on x axis
+        if (movement.x < 0.0f) {
+            sprite.setScale(sf::Vector2f(-1.0f, 1.0f)); // Left
+        }
+        else if (movement.x > 0.0f) {
+            sprite.setScale(sf::Vector2f(1.0f, 1.0f));  // Right
+        }
     }
-
-    // The opposite way for D.
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-        position.x += speed * dt;
-        isMoving = true;
-        sprite.setScale(sf::Vector2f(1.0f, 1.0f));
-    }
-
 
     // Setting a margin to prevent legs/arms of the player to go through the border.
     float margin = 50.0f;
@@ -66,8 +71,7 @@ void Player::update(float dt) {
         position = oldPos; // Returning back to the old position - before interfering with any of the areas.
     }
 
-
-
+    // Animation logic
     if (isMoving) {
         animationTimer += dt;
 

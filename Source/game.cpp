@@ -32,10 +32,10 @@ Game::Game() :
     currentMusicTheme = MusicTheme::None; // For the start we set "none" for the function to detect the needed music itself.
     casinoHeat = 0;
     heatThreshold = 50;
-    playerMoney = 150;
+    playerMoney = 65;
     daysSurvived = 1;
-    playerHp = 30;
-    playerMaxHp = 100;
+    playerHp = 50;
+    playerMaxHp = 50;
     playerDamage = 10;
 
     // Initial settings variables
@@ -73,8 +73,8 @@ void Game::processEvents() {
             // If we clicked escape when on gameover screen.
             if (keyEvent->code == sf::Keyboard::Key::Escape && currentState == GameState::GameOver) {
                 // Casino hard reset.
-                playerHp = 30;
-                playerMoney = 15;
+                playerHp = 50;
+                playerMoney = 65;
                 daysSurvived = 1;
                 casinoHeat = 0;
                 heatThreshold = 50; // The first wave of enemies spawns if the heat reaches 50.
@@ -109,7 +109,7 @@ void Game::update(float dt) {
 
     if (currentState == GameState::Hub || currentState == GameState::Survival) {
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && shootTimer >= 0.3f) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && shootTimer >= 0.3f && (currentState != GameState::RouletteGame || currentState != GameState::CardGame)) {
             shootTimer = 0.0f;
             currentState = GameState::PauseMenu;
             std::cout << "Game Paused." << std::endl;
