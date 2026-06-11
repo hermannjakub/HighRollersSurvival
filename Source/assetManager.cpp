@@ -1,11 +1,9 @@
 #include "assetManager.h"
 
-#include <stdatomic.h>
-
-AssetManager::AssetManager():
-winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playerDamaged(playerDamagedBuffer),shopSound(shopSoundBuffer), clickSound(clickSoundBuffer){
-
-
+AssetManager::AssetManager() : winSound(winBuffer), loseSound(loseBuffer), enemyDamaged(enemyDamagedBuffer),
+                               playerDamaged(playerDamagedBuffer), enemyDamaged2(enemyDamagedBuffer2),
+                               enemyDamaged3(enemyDamagedBuffer3), shopSound(shopSoundBuffer),
+                               clickSound(clickSoundBuffer), shootSound1(shootBuffer1), shootSound2(shootBuffer2) {
     // Initialising the background and gameover texture.
     if (!background.loadFromFile("Assets/casino_map.png") ||
         !gameOver.loadFromFile("Assets/game_over.png")) {
@@ -14,14 +12,16 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
     // Initialising main menu textures.
     if (!menuBackground.loadFromFile("Assets/main_menu_bg.png") ||
         !settingsBackground.loadFromFile("Assets/settings_menu_bg.png")) {
-        std::cerr << "Error - Menu backgrounds (Assets/main_menu_bg.png / Assets/settings_menu_bg.png) NOT FOUND!" << std::endl;
-        }
+        std::cerr << "Error - Menu backgrounds (Assets/main_menu_bg.png / Assets/settings_menu_bg.png) NOT FOUND!" <<
+                std::endl;
+    }
     //Initialising player's textures.
     if (!playerStanding.loadFromFile("Assets/playerStanding.png") ||
         !playerMove1.loadFromFile("Assets/playerMove1.png") ||
         !playerMove2.loadFromFile("Assets/playerMove2.png")) {
-        std::cerr << "Error - Player textures (playerStanding.png, or playerMove1.png, or playerMove2.png) NOT FOUND!" << std::endl;
-        }
+        std::cerr << "Error - Player textures (playerStanding.png, or playerMove1.png, or playerMove2.png) NOT FOUND!"
+                << std::endl;
+    }
 
     // Initialising projectiles textures
     if (!chip.loadFromFile("Assets/poker_chip.png") ||
@@ -34,27 +34,32 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
         !enemyFastRun2.loadFromFile("Assets/enemy_fast2.png") ||
         !enemyFastAttack1.loadFromFile("Assets/enemy_fast_attack_1.png") ||
         !enemyFastAttack2.loadFromFile("Assets/enemy_fast_attack_2.png")) {
-        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
+        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" <<
+                std::endl;
     }
     if (!enemyTankRun1.loadFromFile("Assets/enemy_tank1.png") ||
         !enemyTankRun2.loadFromFile("Assets/enemy_tank2.png") ||
         !enemyTankAttack1.loadFromFile("Assets/enemy_tank_attack_1.png") ||
         !enemyTankAttack2.loadFromFile("Assets/enemy_tank_attack_2.png")) {
-        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
-        }
+        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" <<
+                std::endl;
+    }
     if (!enemyBossRun1.loadFromFile("Assets/enemy_boss1.png") ||
         !enemyBossRun2.loadFromFile("Assets/enemy_boss2.png") ||
         !enemyBossAttack1.loadFromFile("Assets/enemy_boss_attack_1.png") ||
         !enemyBossAttack2.loadFromFile("Assets/enemy_boss_attack_2.png")) {
-        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" << std::endl;
-        }
+        std::cerr << "Error - Texturs (enemy_fast1.png, or enemy_fast2.png or enemy_fast_attack.png) not found!" <<
+                std::endl;
+    }
 
     // Initialising roulette textures.
     if (!wheel.loadFromFile("Assets/roulette_wheel.png") ||
         !pointer.loadFromFile("Assets/win_pointer.png") ||
         !rouletteUI.loadFromFile("Assets/roulette_UI.png") ||
         !rouletteChip.loadFromFile("Assets/roulette_chip.png")) {
-        std::cerr << "Error - Roulette textures (roulette_wheel.png, or win_pointer.png, or roulette_UI.png or roulette_chip.png) NOT FOUND!" << std::endl;
+        std::cerr <<
+                "Error - Roulette textures (roulette_wheel.png, or win_pointer.png, or roulette_UI.png or roulette_chip.png) NOT FOUND!"
+                << std::endl;
     }
 
     // Initialising gambling result textures
@@ -66,23 +71,55 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
     // Initialising sounds
     if (!winBuffer.loadFromFile("Assets/win_sound.mp3") ||
         !loseBuffer.loadFromFile("Assets/lose_sound.mp3") ||
-        !enemyDamagedBuffer.loadFromFile("Assets/security_ouch.wav") ||
         !playerDamagedBuffer.loadFromFile("Assets/security_punch.wav") ||
         !shopSoundBuffer.loadFromFile("Assets/shop_effect.wav") ||
         !clickSoundBuffer.loadFromFile("Assets/click_sound.wav")) {
-        std::cerr << "Error - sounds (win_sound.mp3/lose_sound.mp3/security_ouch.wav/security_punch.wav/shop_effect.wav) not found!" << std::endl;
-        }else {
-            // Connecting buffers to sound objects
-            winSound.setBuffer(winBuffer);
-            loseSound.setBuffer(loseBuffer);
-            enemyDamaged.setBuffer(enemyDamagedBuffer);
-            playerDamaged.setBuffer(playerDamagedBuffer);
-            shopSound.setBuffer(shopSoundBuffer);
-        }
+        std::cerr <<
+                "Error - sounds (win_sound.mp3/lose_sound.mp3/security_ouch.wav/security_punch.wav/shop_effect.wav) not found!"
+                << std::endl;
+    } else {
+        // Connecting buffers to sound objects
+        winSound.setBuffer(winBuffer);
+        loseSound.setBuffer(loseBuffer);
+        enemyDamaged.setBuffer(enemyDamagedBuffer);
+        playerDamaged.setBuffer(playerDamagedBuffer);
+        shopSound.setBuffer(shopSoundBuffer);
+    }
 
     // Loading the font for the HUD
     if (!hudFont.openFromFile("Assets/retro_font.ttf")) {
         std::cerr << "Error - HUD Font (retro_font.ttf) not found!" << std::endl;
+    }
+
+    if (!enemyDamagedBuffer.loadFromFile("Assets/security_ouch_effect.wav")) {
+        std::cerr << "Error - Sound (security_ouch_effect.wav) not found!" << std::endl;
+    } else {
+        enemyDamaged.setBuffer(enemyDamagedBuffer);
+    }
+
+    // --- DODANE: Ładowanie drugiego dźwięku ---
+    if (!enemyDamagedBuffer2.loadFromFile("Assets/security_ouch_effect2.wav")) {
+        std::cerr << "Error - Sound (security_ouch_effect2.wav) not found!" << std::endl;
+    } else {
+        enemyDamaged2.setBuffer(enemyDamagedBuffer2);
+    }
+
+    if (!enemyDamagedBuffer2.loadFromFile("Assets/security_ouch_effect3.wav")) {
+        std::cerr << "Error - Sound (security_ouch_effect3.wav) not found!" << std::endl;
+    } else {
+        enemyDamaged3.setBuffer(enemyDamagedBuffer3);
+    }
+
+    if (!shootBuffer1.loadFromFile("Assets/throw1.mp3")) {
+        std::cerr << "Error - Sound (throw1.wav) not found!" << std::endl;
+    } else {
+        shootSound1.setBuffer(shootBuffer1);
+    }
+
+    if (!shootBuffer2.loadFromFile("Assets/throw2.mp3")) {
+        std::cerr << "Error - Sound (throw2.wav) not found!" << std::endl;
+    } else {
+        shootSound2.setBuffer(shootBuffer2);
     }
 
     // Initialising the cardgame textures.
@@ -93,23 +130,35 @@ winSound(winBuffer),loseSound(loseBuffer),enemyDamaged(enemyDamagedBuffer),playe
         !cardA.loadFromFile("Assets/card_A.png") ||
         !cardHidden.loadFromFile("Assets/card_hidden.png") ||
         !cardGameUI.loadFromFile("Assets/cardgame_UI.png")) {
-        std::cerr << "Error - Cardgame textures (card_10.png/card_J.png/card_Q.png/card_K.png/card_A.png/card_hidden.png/cardgame_UI.png) not found!" << std::endl;
-        }
+        std::cerr <<
+                "Error - Cardgame textures (card_10.png/card_J.png/card_Q.png/card_K.png/card_A.png/card_hidden.png/cardgame_UI.png) not found!"
+                << std::endl;
+    }
 
     if (!shopUI.loadFromFile("Assets/shop_UI.png")) {
         std::cerr << "Error - Shop UI (Shop_UI.png) not found in Assets!" << std::endl;
     }
     // Initialising the background music
     if (!menuMusic.openFromFile("Assets/menu_music.mp3")) std::cerr << "Error! menu_music.mp3 not found in Assets!\n";
-    else { menuMusic.setLooping(true); menuMusic.setVolume(50.0f); }
-
+    else {
+        menuMusic.setLooping(true);
+        menuMusic.setVolume(50.0f);
+    }
     if (!hubMusic.openFromFile("Assets/hub_music.mp3")) std::cerr << "Error! hub_music.mp3 not found in Assets!\n";
-    else { hubMusic.setLooping(true); hubMusic.setVolume(50.0f); }
-
-    if (!minigameMusic.openFromFile("Assets/minigame_music.mp3")) std::cerr << "Error! minigame_music.mp3 not found in Assets!\n";
-    else { minigameMusic.setLooping(true); minigameMusic.setVolume(50.0f); }
-
-    if (!survivalMusic.openFromFile("Assets/survival_music.mp3")) std::cerr << "Error! survival_music.mp3 not found in assets!\n";
-    else { survivalMusic.setLooping(true); survivalMusic.setVolume(50.0f); }
-
+    else {
+        hubMusic.setLooping(true);
+        hubMusic.setVolume(50.0f);
+    }
+    if (!minigameMusic.openFromFile("Assets/minigame_music.mp3"))
+        std::cerr << "Error! minigame_music.mp3 not found in Assets!\n";
+    else {
+        minigameMusic.setLooping(true);
+        minigameMusic.setVolume(50.0f);
+    }
+    if (!survivalMusic.openFromFile("Assets/survival_music.mp3"))
+        std::cerr << "Error! survival_music.mp3 not found in assets!\n";
+    else {
+        survivalMusic.setLooping(true);
+        survivalMusic.setVolume(50.0f);
+    }
 }

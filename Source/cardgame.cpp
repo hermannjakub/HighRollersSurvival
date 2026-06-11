@@ -137,8 +137,10 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
                     // Tie system (returning the money)
                     if (isTie) {
+                        winLoseSprite.setColor(sf::Color::Transparent);
                         std::cout << "It's a tie! Money returned." << std::endl;
                         playerMoney += totalBet;
+
                     }
                     else {
                         int winnings = 0;

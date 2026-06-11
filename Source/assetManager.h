@@ -29,8 +29,12 @@ public:
 
     // --- FONTS, SOUNDS & MUSIC ---
     sf::Font hudFont;
-    sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, playerDamagedBuffer, shopSoundBuffer, clickSoundBuffer;
-    sf::Sound winSound, loseSound, enemyDamaged, playerDamaged, shopSound, clickSound;
+    sf::SoundBuffer winBuffer, loseBuffer, enemyDamagedBuffer, enemyDamagedBuffer2, enemyDamagedBuffer3, playerDamagedBuffer, shopSoundBuffer, clickSoundBuffer;
+    sf::SoundBuffer shootBuffer1;
+    sf::SoundBuffer shootBuffer2;
+    sf::Sound winSound, loseSound, enemyDamaged, enemyDamaged2,enemyDamaged3, playerDamaged, shopSound, clickSound;
+    sf::Sound shootSound1;
+    sf::Sound shootSound2;
 
     sf::Music menuMusic;
     sf::Music hubMusic;

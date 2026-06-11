@@ -5,7 +5,7 @@ FastEnemy::FastEnemy(float x, float y, GameObject* targetPlayer, int* playerHpRe
     // Fast enemy, high velocity, low damage.
     : Enemy(assets.enemyFastRun1, assets.enemyFastRun2, assets.enemyFastAttack1, assets.enemyFastAttack2, 
             x, y, targetPlayer, playerHpRef, 
-            160.0f + (daysSurvived * 5), 30 + (daysSurvived * 5), 10 + (daysSurvived * 2), 1.0f, obstaclesList,assets) {}
+            160.0f + (daysSurvived * 5), 65 + (daysSurvived * 5), 10 + (daysSurvived * 2), 1.0f, obstaclesList,assets) {}
 
 TankEnemy::TankEnemy(float x, float y, GameObject* targetPlayer, int* playerHpRef, 
                      const std::vector<sf::FloatRect>& obstaclesList, AssetManager& assets, int daysSurvived)

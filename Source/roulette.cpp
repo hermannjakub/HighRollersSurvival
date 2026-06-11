@@ -146,7 +146,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
         spinSpeed -= 250.0f * dt;
         spinTimer += dt;
 
-        if (spinSpeed <= 0.0f || spinTimer >= 3.5f) { // Ends the spinning if it spins more than 3.5 secs to make it dynamic.
+        if (spinSpeed <= 0.0f) { // Ends the spinning if it spins more than 3.5 secs to make it dynamic.
             isSpinning = false;
             spinSpeed = 0.0f; // Stopping the wheel.
 

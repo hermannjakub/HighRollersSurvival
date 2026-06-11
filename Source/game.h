@@ -29,16 +29,14 @@ private:
     void processEvents();
     void update(float dt);
     void render();
-
+    void updateMusic();
     void saveGame();
     void loadGame();
-
+    // Class responsible for distingushing which music is necessary.
     enum class MusicTheme { None, Menu, Hub, Minigame, Survival };
-
+    // Variable responsible for current music.
     MusicTheme currentMusicTheme;
-
-    void updateMusic();
-
+    // Rendering variables.
     sf::RenderWindow window;
     sf::Clock clock;
 
@@ -75,5 +73,8 @@ private:
     int playerMaxHp;
     int playerDamage;
 
+    // Vector with obstacles for enemies.
     std::vector<sf::FloatRect> casinoObstacles;
+    // Flag for reducing double clicks.
+    bool wasEscPressed;
 };

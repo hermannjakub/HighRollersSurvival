@@ -126,8 +126,14 @@ void Enemy::draw(sf::RenderWindow& window) {
 }
 
 void Enemy::takeDamage(int dmg) {
-    assets.enemyDamaged.play();
     hp -= dmg;
+
+    if (rand() % 2 == 0) {
+        assets.enemyDamaged.play();
+    } else {
+        assets.enemyDamaged2.play();
+    }
+
     if (hp <= 0) {
         isDestroyed = true;
         std::cout << "Enemy eliminated!" << std::endl;

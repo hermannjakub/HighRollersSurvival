@@ -14,6 +14,9 @@ Game::Game() :
     // Initialising the window size and framerate.
     window.setFramerateLimit(60);
 
+    // Flag indicating if escape was already pressed - preventing going into pause menu after leaving some activities ingame.
+    wasEscPressed = false;
+
     // Setting up the background.
     backgroundSprite.setTexture(assets.background, true);
 
@@ -85,7 +88,7 @@ void Game::processEvents() {
                     gameObjects.erase(gameObjects.begin() + 1, gameObjects.end());
                 }
 
-                currentState = GameState::Hub;
+                currentState = GameState::MainMenu;
                 std::cout << "Game restarted. Good luck!" << std::endl;
             }
         }
@@ -106,11 +109,12 @@ void Game::update(float dt) {
         }
         return; // Blocking the update if we are in the menu
     }
+    // Checking if escape is pressed atm.
+    bool isEscPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape);
 
     if (currentState == GameState::Hub || currentState == GameState::Survival) {
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape) && shootTimer >= 0.3f && (currentState != GameState::RouletteGame || currentState != GameState::CardGame)) {
-            shootTimer = 0.0f;
+        // Going into pause only if player is in hub/survival and if escape wasnt already pressed (to leave roulette for example)
+        if (isEscPressed && !wasEscPressed) {
             currentState = GameState::PauseMenu;
             std::cout << "Game Paused." << std::endl;
         }
@@ -154,6 +158,12 @@ void Game::update(float dt) {
             // 50% chance for changing the chip texture into card texture.
             if (rand() % 2 == 0) {
                 chosenTexture = &assets.card;
+            }
+
+            if (rand() % 2 == 0) {
+                assets.shootSound1.play();
+            } else {
+                assets.shootSound2.play();
             }
 
             // Creating a projectile with direction vector set to where our mouse is.
@@ -255,6 +265,8 @@ void Game::update(float dt) {
             saveGame();
         }
     }
+    // Setting the flag preventing user going into pause menu right after leaving an event.
+    wasEscPressed = isEscPressed;
 }
 
 void Game::render() {
