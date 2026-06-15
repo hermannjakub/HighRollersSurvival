@@ -170,9 +170,8 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
                                 casinoHeat = 0; // Reseting the heat after the wave
                                 heatThreshold += 25; // Increasing the threshold
-                                // Four spawnpoints for the enemies, to make the game look realistic.
+                                // Three spawnpoints for the enemies, to make the game look realistic.
                                 std::vector<sf::Vector2f> spawnPoints = {
-                                    sf::Vector2f(70.0f, 170.0f),
                                     sf::Vector2f(20.0f, 779.0f),
                                     sf::Vector2f(1585.0f, 745.0f),
                                     sf::Vector2f(1585.0f, 236.0f)
@@ -184,7 +183,7 @@ void CardGame::update(float dt, sf::RenderWindow& window, float& shootTimer,
                                 // For-loop spawning the enemies
                                 for (int i = 0; i < enemiesToSpawn; i++) {
                                     // We draw the position for every enemy separately
-                                    sf::Vector2f spawnPos = spawnPoints[rand() % 4];
+                                    sf::Vector2f spawnPos = spawnPoints[rand() % 3];
                                     int enemyType = rand() % 10;
 
                                     if (enemyType <= 5) {

@@ -68,7 +68,7 @@ void Shop::initText(sf::Text& text, int size, sf::Color color) {
 
 // Price scaling depending on how many upgrades we own.
 int Shop::getHpCost()   { return 50 + (ownedHpUpgrades * 25); }
-int Shop::getHealCost() { return 30; }
+int Shop::getHealCost() { return 30 + (ownedHpUpgrades * 10); }
 int Shop::getDmgCost()  { return 100 + (ownedDmgUpgrades * 50); }
 
 // Function getting the total cost to display to the player.
