@@ -21,6 +21,10 @@ public:
     virtual void update(float dt) = 0; // Updating the objects (hp,position)
     virtual void draw(sf::RenderWindow& window) = 0; // Drawing the objects.
     virtual void takeDamage(int dmg) {} // Modifying the HP.
+    virtual void setPosition(sf::Vector2f newPos) {
+        position = newPos;
+        sprite.setPosition(position);
+    }
 
 
     sf::Vector2f getPosition() const { return position; }

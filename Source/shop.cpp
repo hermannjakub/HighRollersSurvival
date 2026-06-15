@@ -138,7 +138,7 @@ void Shop::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
                 std::cout << "Purchase successful! Max HP: " << playerMaxHp << " | DMG: " << playerDamage << std::endl;
             } else if (total > 0) {
-                assets.loseSound.play(); // Error sound - not enough money.
+                assets.wrongButton.play(); // Error sound - not enough money.
                 std::cout << "Not enough money!" << std::endl;
             }
         }

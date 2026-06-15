@@ -12,7 +12,8 @@ AssetManager::AssetManager()
       shopSound(shopSoundBuffer),
       clickSound(clickSoundBuffer),
       shootSound1(shootBuffer1),
-      shootSound2(shootBuffer2)
+      shootSound2(shootBuffer2),
+      wrongButton(wrongButtonBuffer)
 {
     // ==========================================
     // 1. LOADING TEXTURES (ENVIRONMENT AND MENUS)
@@ -127,7 +128,8 @@ AssetManager::AssetManager()
         !loseBuffer.loadFromFile("Assets/lose_sound.mp3") ||
         !playerDamagedBuffer.loadFromFile("Assets/security_punch.wav") ||
         !shopSoundBuffer.loadFromFile("Assets/shop_effect.wav") ||
-        !clickSoundBuffer.loadFromFile("Assets/click_sound.wav")) {
+        !clickSoundBuffer.loadFromFile("Assets/click_sound.wav") ||
+        !wrongButtonBuffer.loadFromFile("Assets/wrong_button.wav")) {
         std::cerr << "Error - Core sounds not found!" << std::endl;
     }
 

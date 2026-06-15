@@ -201,7 +201,7 @@ void Roulette::update(float dt, sf::RenderWindow& window, float& shootTimer,
 
 
                                 // Amount of enemies starts at 2 and increases every 9 days
-                                int enemiesToSpawn = 2 + (daysSurvived / 9);
+                                int enemiesToSpawn = 2 + (daysSurvived / 7);
 
                                 // For-loop spawning the enemies.
                                 for (int i = 0; i < enemiesToSpawn; i++) {

@@ -77,6 +77,7 @@ public:
     sf::SoundBuffer playerDamagedBuffer;
     sf::SoundBuffer shopSoundBuffer;
     sf::SoundBuffer clickSoundBuffer;
+    sf::SoundBuffer wrongButtonBuffer;
 
     // Enemy hit variants
     sf::SoundBuffer enemyDamagedBuffer;
@@ -95,6 +96,7 @@ public:
     sf::Sound playerDamaged;
     sf::Sound shopSound;
     sf::Sound clickSound;
+    sf::Sound wrongButton;
 
     // Enemy hit variants
     sf::Sound enemyDamaged;

@@ -21,7 +21,7 @@ Game::Game() :
     backgroundSprite.setTexture(assets.background, true);
 
     // Initialising the player.
-    gameObjects.push_back(std::make_unique<Player>(assets.playerStanding, assets.playerMove1, assets.playerMove2, 400.0f, 300.0f));
+    gameObjects.push_back(std::make_unique<Player>(assets.playerStanding, assets.playerMove1, assets.playerMove2, 800.0f, 446.0f));
 
     // Fixing the hud position in top-left corner.
     hudText.setFont(assets.hudFont);
@@ -87,7 +87,9 @@ void Game::processEvents() {
                 if (gameObjects.size() > 1) {
                     gameObjects.erase(gameObjects.begin() + 1, gameObjects.end());
                 }
-
+                // Setting players position back to the middle.
+                gameObjects[0]->setPosition(sf::Vector2f(800.0f, 446.0f));
+                // Changing the gamestate.
                 currentState = GameState::MainMenu;
                 std::cout << "Game restarted. Good luck!" << std::endl;
             }
@@ -97,7 +99,7 @@ void Game::processEvents() {
 
 void Game::update(float dt) {
     shootTimer += dt;
-    updateMusic();
+    updateMusic(); // Updating the music according to the gamestate.
 
 
     if (currentState == GameState::MainMenu || currentState == GameState::Settings) {
@@ -146,9 +148,6 @@ void Game::update(float dt) {
 
             // Calculating direction vector for the projectile
             sf::Vector2f aimDirection = mousePos - playerPos;
-
-            // Creating a projectile with direction vector set to where our mouse is.
-            gameObjects.push_back(std::make_unique<Projectile>(assets.chip, playerPos.x, playerPos.y, aimDirection));
 
             // Randomly drawing the texture of projectile - card/chip
 
@@ -344,6 +343,8 @@ void Game::render() {
     // Displaying.
     window.display();
 }
+
+// WARNING: The order of reading variables must perfectly match the order of writing them!
 // Game pattern for save files and saving/loading them.
 void Game::saveGame() {
     std::ofstream file("save.txt");
@@ -361,7 +362,7 @@ void Game::saveGame() {
         std::cerr << "Error - Could not create save file!" << std::endl;
     }
 }
-
+// Loading the game from the file.
 void Game::loadGame() {
     std::ifstream file("save.txt");
     if (file.is_open()) {
